@@ -100,8 +100,8 @@
                                 </div>
                                 <div class="col-md-6 text-right">
                                     <label for="js-success">Vat</label>
-                                    <input type="checkbox" id="js-success" class="js-success" <?php
-                                    $store_data->vat_status=="active"? printf("checked"):printf("") ?>/>
+                                    <input type="checkbox" id="js-success" class="js-success" <?=
+                                    ($store_data->vat_status=="on")? "checked":"" ?>/>
                                 </div>
 
                             </div>
@@ -174,6 +174,7 @@
                                         </table>
                                     </div>
                                     <br>
+                                    <?php if ($store_data->discount=="on"):?>
                                     <div class="col-md-12">
                                         <p>
                                             <button type="button" id="discountBtn" class="btn btn-success col-md-12" data-toggle="modal" data-target="#discountModal">
@@ -181,6 +182,7 @@
                                             </button>
                                         </p>
                                     </div>
+                                    <?php endif;?>
                                     <div class="col-md-12">
                                         <p>
                                             <button type="button" id="savem" class="btn btn-warning col-md-12">

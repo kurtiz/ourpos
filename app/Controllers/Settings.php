@@ -5,6 +5,7 @@ namespace App\Controllers;
 use CodeIgniter\Controller;
 use App\Models\DashboardModel;
 use App\Models\StoreModel;
+use CodeIgniter\HTTP\RedirectResponse;
 
 class Settings extends Controller {
 
@@ -45,6 +46,12 @@ class Settings extends Controller {
     public $store_data;
 
     /**
+     * object class of the data of the current logged store
+     * @var false|mixed
+     */
+    public $settingsModel;
+
+    /**
      * Store Class constructor.
      */
     public function __construct() {
@@ -58,7 +65,7 @@ class Settings extends Controller {
 
     /**
      * Main function of this Controller
-     * @return string
+     * @return RedirectResponse|string
      */
     public function index(){
         /**
@@ -67,6 +74,29 @@ class Settings extends Controller {
          */
         if (!session()->has("logged_user")) {
             return redirect()->to(base_url());
+        }
+
+        if($this->request->getMethod() == "post"){
+            $store_settings = [
+                "store_name" => $this->request->getVar("storeName", FILTER_SANITIZE_STRING),
+                "address" => $this->request->getVar("storeAddress", FILTER_SANITIZE_STRING),
+                "mobile" => $this->request->getVar("storeMobile", FILTER_SANITIZE_STRING),
+                "fax" => $this->request->getVar("storeFax", FILTER_SANITIZE_STRING),
+                "email" => $this->request->getVar("storeEmail", FILTER_SANITIZE_EMAIL),
+                "receipt_prefix" => $this->request->getVar("storePrefix", FILTER_SANITIZE_STRING),
+                "vat" => $this->request->getVar("storeVatPercentage", FILTER_SANITIZE_STRING),
+                "discount" => $this->request->getVar("storeDiscount", FILTER_SANITIZE_STRING),
+                "barcode" => $this->request->getVar("storeBarcode", FILTER_SANITIZE_STRING),
+                "vat_status" => $this->request->getVar("storeVat", FILTER_SANITIZE_STRING)
+            ];
+
+            if($this->storeModel->updateStoreData($this->store_id, $store_settings)){
+                session()->setTempdata("success", "Updated successfully!", 3);
+            } else {
+                session()->setTempdata("error", "An error occurred!", 3);
+            }
+
+            return redirect()->to(base_url()."/settings");
         }
 
         $this->userdata = $this->dashModel->getLoggedUserData((string)$this->user_id);

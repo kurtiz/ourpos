@@ -93,9 +93,10 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label>Store Name</label>
-                                                    <input type="text" data-toggle="tooltip" data-placement="top"
+                                                    <input disabled type="text" data-toggle="tooltip" data-placement="top"
                                                            title="Name of the store" class="form-control"
-                                                           placeholder="Omega Super Market"
+                                                           placeholder="Omega Super Market" id="store_name"
+                                                           name="storeName"
                                                            value="<?= $storedata->store_name ?>">
                                                 </div>
                                             </div>
@@ -106,7 +107,7 @@
                                                     <label>Address</label>
                                                     <textarea data-toggle="tooltip" data-placement="top"
                                                               title="Address or the location of the store"
-                                                              class="form-control"
+                                                              class="form-control" disabled name="storeAddress"
                                                               placeholder=""><?= $storedata->address ?></textarea>
                                                 </div>
                                             </div>
@@ -115,9 +116,9 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Phone</label>
-                                                    <input data-toggle="tooltip" data-placement="top"
-                                                           title="Phone contact number for the store" type="text"
-                                                           class="form-control" placeholder="024 587 1456"
+                                                    <input data-toggle="tooltip" data-placement="top" id="store_mobile"
+                                                           title="Phone contact number for the store" disabled type="text"
+                                                           class="form-control" placeholder="024 587 1456" name="storeMobile"
                                                            value="<?= $storedata->mobile ?>">
                                                 </div>
                                             </div>
@@ -125,8 +126,8 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Fax</label>
-                                                    <input type="text" data-toggle="tooltip" data-placement="top"
-                                                           title="Fax number for the store" class="form-control"
+                                                    <input disabled type="text" data-toggle="tooltip" data-placement="top"
+                                                           title="Fax number for the store" class="form-control" name="storeFax"
                                                            placeholder="" value="<?= $storedata->fax ?>">
                                                 </div>
                                             </div>
@@ -136,8 +137,9 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label>Email</label>
-                                                    <input type="text" data-toggle="tooltip" data-placement="top"
+                                                    <input disabled type="text" data-toggle="tooltip" data-placement="top"
                                                            title="Email contact of the store" class="form-control"
+                                                           id="store_email" name="storeEmail"
                                                            placeholder="" value="<?= $storedata->email ?>">
                                                 </div>
                                             </div>
@@ -147,19 +149,19 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Receipt Prefix</label>
-                                                    <input type="text" data-toggle="tooltip" data-placement="top"
+                                                    <input disabled type="text" data-toggle="tooltip" data-placement="top"
                                                            title="This is the phrase or keyword added to the receipt number to uniquely identify you shop's receipt numbers"
-                                                           class="form-control" placeholder=""
+                                                           class="form-control form-control-uppercase" placeholder="RCP" id="rc_prefix" name="storePrefix"
                                                            value="<?= $storedata->receipt_prefix ?>">
                                                 </div>
 
                                             </div>
-                                            <div class="col-md-6 hidden" id="vat_percentage" >
+                                            <div class="col-md-6 <?=($storedata->vat_status == "on")? "" : "hidden" ?>" id="vat_percentage" >
                                                 <div class="form-group">
                                                     <label>Vat %</label>
-                                                    <input type="text" data-toggle="tooltip" data-placement="top"
+                                                    <input disabled type="number" data-toggle="tooltip" data-placement="top"
                                                            title="VAT percentage applied to the sales"
-                                                           class="form-control" placeholder=""
+                                                           class="form-control" placeholder="10" name="storeVatPercentage"
                                                            value="<?= $storedata->vat ?>">
                                                 </div>
                                             </div>
@@ -172,7 +174,8 @@
                                                      title="Toggle to enable Discounts when making sales"
                                                      class="form-group">
                                                     <label for="js-success">Discount</label>
-                                                    <input type="checkbox" id="discount" class="js-success" checked/>
+                                                    <input type="checkbox" id="discount" class="js-success" name="storeDiscount"
+                                                        <?= $storedata->discount == "on" ? "checked" : "" ?>/>
                                                 </div>
                                             </div>
 
@@ -182,7 +185,8 @@
                                                      title="Toggle to enable search with barcode scanner when making sales"
                                                      class="form-group">
                                                     <label for="js-success">Barcode Search</label>
-                                                    <input type="checkbox" id="bc_search" class="js-success" checked/>
+                                                    <input type="checkbox" id="bc_search" class="js-success" name="storeBarcode"
+                                                        <?= $storedata->barcode == "on" ? "checked" : "" ?>/>
                                                 </div>
                                             </div>
 
@@ -191,14 +195,17 @@
                                                      title="Toggle to enable VAT when making sales"
                                                      class="form-group">
                                                     <label for="js-success">Vat</label>
-                                                    <input type="checkbox" id="vat"
-                                                           class="js-success" <?= $storedata->vat_status == "active" ? "checked" : "" ?>/>
+                                                    <input type="checkbox" id="vat" name="storeVat"
+                                                           class="js-success" <?= $storedata->vat_status == "on" ? "checked" : "" ?>/>
                                                 </div>
                                             </div>
 
                                         </div>
-                                        <button
                                     </form>
+
+                                    <button id="editBtn" type="button" class="btn btn-success">Edit</button>
+                                    <button id="submitBtn" type="button" style="display: none" class="btn btn-success">Submit</button>
+
                                 </div>
                             </div>
                         </div>
@@ -214,8 +221,6 @@
     <?= $this->include("widgets/user_menu"); ?>
 
     <script src="<?= base_url(); ?>/public/src/js/vendor/jquery-3.3.1.min.js"></script>
-    <script>
-    </script>
     <script src="<?= base_url(); ?>/public/plugins/popper.js/dist/umd/popper.min.js"></script>
     <script src="<?= base_url(); ?>/public/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="<?= base_url(); ?>/public/plugins/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
@@ -226,8 +231,8 @@
     <script src="<?= base_url(); ?>/public/plugins/jquery-toast-plugin/dist/jquery.toast.min.js"></script>
     <script src="<?= base_url(); ?>/public/plugins/mohithg-switchery/dist/switchery.min.js"></script>
     <script>
-
-        $("settings-form").on("submit", function (){
+        let form = $("#settings-form")
+        form.on("submit", function (){
             loading_overlay(1)
         })
 
@@ -243,7 +248,6 @@
                 });
             }
             //*** End switchery instantiating ***//
-
         });
 
         $('#vat').on("change", function () {
@@ -263,6 +267,153 @@
                 }
             }
         )
+
+
+        let editBtn = $("#editBtn")
+        let inputText = $("#settings-form input")
+        let inputTextArea = $("#settings-form textarea")
+        let submitBtn = $("#submitBtn")
+        let storeName = $("#store_name")
+        let storeMobile = $("#store_mobile")
+        let storeEmail = $("#store_email")
+        let storeVat = $("#rc_prefix")
+
+        editBtn.on("click", function(){
+            if (editBtn.text() === "Edit") {
+                editBtn.removeClass("btn-success");
+                editBtn.addClass("btn-danger");
+                editBtn.text("Cancel");
+                submitBtn.show();
+
+                inputText.prop("disabled", false)
+                inputTextArea.prop("disabled", false)
+            }else {
+                editBtn.removeClass("btn-danger");
+                editBtn.addClass("btn-success");
+                editBtn.text("Edit");
+                submitBtn.hide();
+
+                inputText.prop("disabled", true)
+                inputTextArea.prop("disabled", true)
+            }
+
+        })
+
+        submitBtn.on("click", function() {
+            if (storeName.val() === "") {
+                $.toast({
+                    text: 'Store name must not be empty!',
+                    showHideTransition: 'fade',
+                    icon: 'error',
+                    position: "top-right",
+                    bgColor: '#f5365c',
+                    textColor: 'white'
+                })
+
+                if(storeName.hasClass("form-control-success")){
+                    storeName.removeClass("form-control-success")
+                    storeName.addClass("form-control-danger")
+                }
+
+                storeName.addClass("form-control-danger")
+                storeName.focus()
+
+            } else if(storeName.hasClass('form-control-danger')) {
+
+                storeName.removeClass("form-control-danger")
+                storeName.addClass("form-control-success")
+
+            }
+
+            if (storeMobile.val() === ""){
+                $.toast({
+                    text: 'Phone must not be empty!',
+                    showHideTransition: 'fade',
+                    icon: 'error',
+                    position: "top-right",
+                    bgColor: '#f5365c',
+                    textColor: 'white'
+                })
+
+                if(storeMobile.hasClass("form-control-success")){
+                    storeMobile.removeClass("form-control-success")
+                    storeMobile.addClass("form-control-danger")
+                }
+
+                storeMobile.addClass("form-control-danger")
+
+                if (!storeName.hasClass('form-control-danger')) {
+                    storeMobile.focus()
+                }
+            } else if(storeMobile.hasClass('form-control-danger')) {
+
+                storeMobile.removeClass("form-control-danger")
+                storeMobile.addClass("form-control-success")
+
+            }
+
+            if (storeEmail.val() === ""){
+                $.toast({
+                    text: 'Email must not be empty!',
+                    showHideTransition: 'fade',
+                    icon: 'error',
+                    position: "top-right",
+                    bgColor: '#f5365c',
+                    textColor: 'white'
+                })
+
+                if(storeEmail.hasClass("form-control-success")){
+                    storeEmail.removeClass("form-control-success")
+                    storeEmail.addClass("form-control-danger")
+                }
+
+                storeEmail.addClass("form-control-danger")
+
+                if(!storeMobile.hasClass('form-control-danger')){
+                    storeEmail.focus()
+                }
+
+            } else if(storeEmail.hasClass('form-control-danger')) {
+
+                storeEmail.removeClass("form-control-danger")
+                storeEmail.addClass("form-control-success")
+
+            }
+
+            if(storeName !== "" && storeMobile !== "" && storeEmail !== ""){
+                loading_overlay(1)
+                form.submit()
+            }
+
+        })
+
+        <?php
+        if (!empty(session()->getTempdata('success'))):
+        ?>
+        $.toast({
+            text: '<?=session()->getTempdata('success')?>',
+            showHideTransition: 'fade',
+            icon: 'success',
+            position: "top-right",
+            bgColor: '#2dce89',
+            textColor: 'white'
+        })
+
+        <?php
+        elseif(!empty(session()->getTempdata('error'))):
+        ?>
+        $.toast({
+            text: '<?=session()->getTempdata('error')?>',
+            showHideTransition: 'fade',
+            icon: 'error',
+            position: "top-right",
+            bgColor: '#f5365c',
+            textColor: 'white'
+        })
+
+        <?php
+        endif;
+        ?>
 
     </script>
     </body>

@@ -26,7 +26,8 @@ class StoreModel extends Model {
      * @param $store_data array|mixed is the set of data to be updated
      * @return bool returns true if the changes were applied else returns false
      */
-    public function setStoreData(string $store_id, array $store_data) {
+    public function updateStoreData(string $store_id, array $store_data): bool
+    {
         $builder = $this->db->table("stores_settings");
         $builder->where('store_id',$store_id);
         $builder->update($store_data);

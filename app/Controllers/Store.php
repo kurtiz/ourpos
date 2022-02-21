@@ -151,7 +151,7 @@
             if ($this->request->getMethod() == "post"){
                 $data['post'] = $_POST;
                 session()->setTempdata( "uri_referer",$this->request->uri, "10");
-                    $receipt_prefix = $this->store_data->receipt_prefix;
+                    $receipt_prefix = (empty($this->store_data->receipt_prefix)) ? $this->store_data->receipt_prefix : "OPS";
                     switch($_POST['sale_type']) {
                         case "direct":
                             $sale = [

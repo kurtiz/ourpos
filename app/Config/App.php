@@ -21,8 +21,7 @@ class App extends BaseConfig
 	| environments.
 	|
 	*/
-	public $baseURL = 'https://store.ourtechnologies.org';
-//	public $baseURL = 'http://localhost/myci4/';
+	public $baseURL = 'http://localhost/myci4/';
 
 	/*
 	|--------------------------------------------------------------------------
