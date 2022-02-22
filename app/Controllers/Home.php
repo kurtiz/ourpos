@@ -26,7 +26,7 @@ class Home extends BaseController {
 			$username = $this->request->getVar('username',FILTER_SANITIZE_STRING);
 			$password = $this->request->getVar('password');
 
-			$userdata = $this->loginModel->verifyUsername($username);
+			$userdata = $this->loginModel->verifyUsername(strtolower($username));
 
                 if ($userdata) {
 
@@ -70,7 +70,7 @@ class Home extends BaseController {
 		return view('login',$data);
 	}
 
-	public function test(){
+	public function test(): string {
 	    return view("test");
     }
 

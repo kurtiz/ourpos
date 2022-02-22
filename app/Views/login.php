@@ -52,12 +52,14 @@
                             <p>Happy to see you again!</p>
                             <?= form_open(current_url(), ['id' => 'login_form'])?>
                                 <div class="form-group">
-                                    <input type="text" autofocus id="username" name="username" class="form-control" placeholder="username" >
+                                    <input type="text" autofocus id="username" name="username" class="form-control form-control-lowercase" placeholder="username" >
                                     <i class="ik ik-user"></i>
                                 </div>
                                 <div class="form-group">
-                                    <input type="password" id="password"name="password" class="form-control" placeholder="password" autocomplete="on">
-                                    <i class="ik ik-lock"></i>
+                                    <input type="password" id="password" name="password" class="form-control"
+                                           data-toggle="tooltip" data-placement="top"
+                                           title="Tap on icon to toggle password visibility" placeholder="password">
+                                    <i class="ik ik-lock" id="passLock"></i>
                                 </div>
                                 <div class="row">
                                     <div class="col text-left">
@@ -86,17 +88,19 @@
         <script src="<?php base_url(); ?>public/dist/js/theme.js"></script>
         <script src="<?php base_url(); ?>public/plugins/jquery-toast-plugin/dist/jquery.toast.min.js"></script>
         <script src="<?php base_url(); ?>public/js/jquery.tabbale.js"></script>
-        <script> 
-            // NOTE trying to validate provided credentials before sending the post request
+        <script>
 
+            let username = $("#username")
+            let password = $("#password")
+            // NOTE trying to validate provided credentials before sending the post request
             // SECTION [username_validate] validates username 
-            $("#username").keypress(function(event) { 
+            username.keypress(function(event) {
                 
                 // ANCHOR CHECKS IF THE KEYSTROKE PRESSED IS THE "enter" KEY
                 if (event.keyCode === 13) { 
                     
 
-                    if ($("#username").val()==""){
+                    if (username.val() === ""){
                         
                         $.toast({
                             heading: 'Error',
@@ -117,13 +121,13 @@
             // !SECTION
 
             // SECTION [password_validate] validates password 
-            $("#password").keypress(function (event){
+            password.keypress(function (event){
                 
                 // ANCHOR CHECKS IF THE KEYSTROKE PRESSED IS THE "enter" KEY
                 if (event.keyCode === 13) { 
 
 
-                    if ($("#password").val()==""){
+                    if (password.val() === ""){
                         
                         $.toast({
                             heading: 'Error',
@@ -142,10 +146,10 @@
             // !SECTION
             
             // SECTION [sign_in_validate] validates both password and username
-            $("#sign_in").click(function (event){
+            $("#sign_in").on("click", function (event){
 
 
-                    if ($("#username").val()==""){
+                    if (username.val() === ""){
                         
                         $.toast({
                             heading: 'Error',
@@ -157,7 +161,7 @@
                         })
                     }else {
                          
-                        if ($("#password").val()==""){
+                        if (password.val() === ""){
                         
                         $.toast({
                             heading: 'Error',
@@ -174,6 +178,14 @@
                 }
             });
             // !SECTION
+
+            $("#passLock").on("click", function(){
+                if (password.prop("type") === "password"){
+                    password.prop("type", "text")
+                } else if (password.prop("type") === "text"){
+                    password.prop("type", "password")
+                }
+            })
 
             <?php 
                 if (!empty(session()->getTempdata('error'))): 
