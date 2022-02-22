@@ -139,7 +139,7 @@
                                                             <?php if ($row['pending_status'] == 1):?>
                                                                 <a href="javascript:edit(<?= $row['sales_id'] ?>)"><i
                                                                             data-toggle="tooltip" data-placement="top"
-                                                                            title="Edit" onclick="loading_overlay(1)"
+                                                                            title="Edit"
                                                                             class="ik ik-edit text-green"></i></a>
                                                             <?php endif;?>
                                                             <a href="<?= base_url(); ?>/store/sales/view/<?= $row['sales_id'] ?>"><i
@@ -305,7 +305,8 @@
         }).then((result) => {
             //  when confirm button (yes) is clicked
             if (result.isConfirmed) {
-
+                // shows loading screen overlay
+                loading_overlay(1)
                 // redirects to the edit page
                 window.location.assign(domain + "/store/sales/edit/"+id)
             } else if (result.isDenied) { // when the denied button (no) is clicked

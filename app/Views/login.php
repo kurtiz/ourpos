@@ -85,7 +85,7 @@
         <script src="<?php base_url(); ?>public/src/js/vendor/jquery-3.3.1.min.js"></script>
         <script src="<?php base_url(); ?>public/plugins/popper.js/dist/umd/popper.min.js"></script>
         <script src="<?php base_url(); ?>public/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="<?php base_url(); ?>public/dist/js/theme.js"></script>
+        <script src="<?php base_url(); ?>public/dist/js/theme.min.js"></script>
         <script src="<?php base_url(); ?>public/plugins/jquery-toast-plugin/dist/jquery.toast.min.js"></script>
         <script src="<?php base_url(); ?>public/js/jquery.tabbale.js"></script>
         <script>
@@ -139,6 +139,7 @@
                         })
 
                     }else{
+                        loading_overlay(1)
                         $("#login_form").submit()
                     }   
                 } 
@@ -173,6 +174,7 @@
                         });
 
                     }else{
+                        loading_overlay(1)
                         $("#login_form").submit();
                     }
                 }
