@@ -87,7 +87,7 @@
                         <h3 class="d-block w-100">
                             <img src="<?=base_url()?>/public/src/img/brand.png" height="50" alt="logo">
                             <small class="float-right">
-                                Date: <?=$sale->fulldate#?>
+                                Date: <?=$sale->fulldate?>
                             </small>
                         </h3>
                     </div>
@@ -122,8 +122,12 @@
                                     <span class="badge badge-warning">Pending</span>
                                 <?php endif;?>
                                 <br>
-                                <b>Order ID:</b> 4F3S8J<br>
-                                <b>Payment Due: </b> <?=$sale->date_sold?><br>
+                                <?php if ($store_data->salesCount == "on"):?>
+                                <b>Order No.:</b> <?=$sale->salesCount?><br>
+                                <?php endif;?>
+                                <b>Payment Due: </b> <?=(empty($sale->sale_close_date)) ? "Not Yet":
+                                    str_replace(",", " ",$sale->sale_close_date)?>
+                                <br>
                                 <b>Sales Rep :</b>
                                 <a href="<?=base_url()?>/users/view/<?=$userdata->user_id?>" style="color: #0f38ff">
                                     <?=$userdata->name?>
@@ -175,6 +179,7 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <?php if ($sale->vat_status): ?>
                                             <th>Vat(<?=$sale->vat?>%):</th>
                                             <td>
                                                 GHc.
@@ -182,6 +187,7 @@
                                                     <?=$sale->vat_amount?>
                                                 </span>
                                             </td>
+                                            <?php endif; ?>
                                         </tr>
                                         <tr>
                                             <th>Total:</th>
@@ -230,7 +236,8 @@
                         <div class="row no-print">
                             <div class="col-12">
                                 <?php if ($sale->pending_status == 1):?>
-                                    <a href="<?=base_url()?>/store/sales/edit/<?=$sale->sales_id?>" id="editBtn" class="btn btn-success pull-right"><i class="fa fa-edit"></i>Edit</a>
+                                    <a href="<?=base_url()?>/store/sales/edit/<?=$sale->sales_id?>" id="editBtn" class="btn btn-warning pull-right"><i class="fa fa-edit"></i>Edit</a>
+                                    <a href="<?=base_url()?>/store/print/receipt/<?=$sale->sales_id?>" id="printBtn" class="btn btn-success pull-right"><i class="fa fa-print"></i>Print</a>
                                 <?php else:?>
                                     <a href="<?=base_url()?>/store/print/receipt/<?=$sale->sales_id?>" id="printBtn" class="btn btn-success pull-right"><i class="fa fa-print"></i>Print</a>
                                 <?php endif; ?>

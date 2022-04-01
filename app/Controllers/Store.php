@@ -150,245 +150,251 @@
              */
             if ($this->request->getMethod() == "post"){
                 $data['post'] = $_POST;
-                session()->setTempdata( "uri_referer",$this->request->uri, "10");
-                    $receipt_prefix = (empty($this->store_data->receipt_prefix)) ? $this->store_data->receipt_prefix : "OPS";
-                    switch($_POST['sale_type']) {
-                        case "direct":
-                            $sale = [
-                                "customer_id"       => $_POST['cus_id'],
-                                "customer_name"     => $_POST['cus_name'],
-                                "receipt_num"       => $receipt_prefix . date("Hmydis"),
-                                "user_name"         => $this->userdata->name,
-                                "user_id"           => $this->user_id,
-                                "total_amount"      => (float)str_replace(",", "", $_POST['total_amount']),
-                                "amount_change"     => $_POST['change'],
-                                "amount_paid"       => $_POST['paid'],
-                                "vat"               => $_POST['vat_percentage'],
-                                "vat_amount"        => $_POST['vat_amount'],
-                                "discount_type"     => $_POST['discount_type'],
-                                "discount"          => $_POST['discount_amount'],
-                                "subtotal"          => (float)array_sum($_POST['amount']),
-                                "date_sold"         => date("Y-m-d"),
-                                "time_sold"         => date("H:i:s"),
-                                "store_id"          => $this->store_id,
-                                "fulldate"          => date("D jS F, Y  H:ia"),
+                session()->setTempdata( "uri_referer",base_url()."/store", "10");
+
+                $salesCount = $this->storefrontModel->getSalesCount([
+                    "date_sold" => date("Y-m-d"),
+                    "store_id" => $this->store_id
+                ]);
+
+                $receipt_prefix = (empty($this->store_data->receipt_prefix)) ? $this->store_data->receipt_prefix : "OPS";
+                switch($_POST['sale_type']) {
+                    case "direct":
+                        $sale = [
+                            "customer_id"       => $_POST['cus_id'],
+                            "customer_name"     => $_POST['cus_name'],
+                            "receipt_num"       => $receipt_prefix . date("Hmydis"),
+                            "user_name"         => $this->userdata->name,
+                            "user_id"           => $this->user_id,
+                            "total_amount"      => (float)str_replace(",", "", $_POST['total_amount']),
+                            "amount_change"     => $_POST['change'],
+                            "amount_paid"       => $_POST['paid'],
+                            "vat"               => $_POST['vat_percentage'],
+                            "vat_amount"        => $_POST['vat_amount'],
+                            "discount_type"     => $_POST['discount_type'],
+                            "discount"          => $_POST['discount_amount'],
+                            "subtotal"          => (float)array_sum($_POST['amount']),
+                            "date_sold"         => date("Y-m-d"),
+                            "time_sold"         => date("H:i:s"),
+                            "store_id"          => $this->store_id,
+                            "fulldate"          => date("D jS F, Y  h:i a"),
+                            "salesCount"        => $salesCount  ? $salesCount + 1 : 1
+                        ];
+
+                        $data['post']["salesCount"] = $sale['salesCount'];
+
+                        $sentSale = $this->storefrontModel->sendSale($sale);
+                        $sale['pending_status'] = 0;
+
+                        $data['sale'] = $sale;
+                        $data['saleID'] = $sentSale;
+
+                        if ($sentSale) {
+                            $postedSale = [
+                                "product_id" => $this->request->getVar("item_id"),
+                                "product" => $this->request->getVar("item"),
+                                "quantity" => $this->request->getVar("quantity"),
+                                "price" => $this->request->getVar("price"),
+                                "amount" => $this->request->getVar("amount"),
                             ];
 
-                            $sentSale = $this->storefrontModel->sendSale($sale);
-                            $sale['pending_status'] = 0;
-
-                            $data['sale'] = $sale;
-                            $data['saleID'] = $sentSale;
-
-                            if ($sentSale) {
-                                $postedSale = [
-                                    "product_id" => $this->request->getVar("item_id"),
-                                    "product" => $this->request->getVar("item"),
-                                    "quantity" => $this->request->getVar("quantity"),
-                                    "price" => $this->request->getVar("price"),
-                                    "amount" => $this->request->getVar("amount"),
+                            for ($i = 0; $i < count($postedSale['product']); $i++) {
+                                $saleDetails = [
+                                    "sales_id" => $sentSale,
+                                    "store_id" => $this->store_id,
+                                    "product" => $postedSale["product"][$i],
+                                    "product_id" => $postedSale["product_id"][$i],
+                                    "quantity" => $postedSale["quantity"][$i],
+                                    "price" => $postedSale["price"][$i],
+                                    "amount" => $postedSale["amount"][$i],
+                                    "date_sold" => $sale['date_sold'],
+                                    "time_sold" => $sale['time_sold']
                                 ];
 
-                                for ($i = 0; $i < count($postedSale['product']); $i++) {
-                                    $saleDetails = [
-                                        "sales_id" => $sentSale,
-                                        "store_id" => $this->store_id,
-                                        "product" => $postedSale["product"][$i],
-                                        "product_id" => $postedSale["product_id"][$i],
-                                        "quantity" => $postedSale["quantity"][$i],
-                                        "price" => $postedSale["price"][$i],
-                                        "amount" => $postedSale["amount"][$i],
-                                        "date_sold" => $sale['date_sold'],
-                                        "time_sold" => $sale['time_sold']
-                                    ];
+                                $queryResponse = $this->storefrontModel->sendSaleDetails($saleDetails);
 
-                                    $queryResponse = $this->storefrontModel->sendSaleDetails($saleDetails);
-
-                                    if ($queryResponse) {
-                                        $data["message"] = "Row Successfully Added";
-                                    } else {
-                                        $data["message"] = "An Error Occurred";
-                                    }
-
+                                if ($queryResponse) {
+                                    $data["message"] = "Row Successfully Added";
+                                } else {
+                                    $data["message"] = "An Error Occurred";
                                 }
 
-                            } else {
-                                $data["message"] = "An Error Occurred";
                             }
 
-                            if (!empty($sale['customer_id'])) {
-                                $customerDetails = $this->customersModel->getCustomer([
-                                    'store_id' => $this->store_id,
-                                    'customer_id' => $sale['customer_id']
-                                ]);
+                        } else {
+                            $data["message"] = "An Error Occurred";
+                        }
 
-                                $data['customerDetails'] = $customerDetails;
-                            }
+                        if (!empty($sale['customer_id'])) {
+                            $customerDetails = $this->customersModel->getCustomer([
+                                'store_id' => $this->store_id,
+                                'customer_id' => $sale['customer_id']
+                            ]);
 
-                            session()->setTempdata('sales_id', $sentSale, '6');
-                            $data['inputs'] = $_POST;
+                            $data['customerDetails'] = $customerDetails;
+                        }
 
-                            return view("sales_receipt", $data);
+                        session()->setTempdata('sales_id', $sentSale, '6');
+                        $data['inputs'] = $_POST;
+
+                        return view("sales_receipt", $data);
 
 
-                        case "credit":
-                            $sale = [
-                                "customer_id"       => $_POST['cus_id'],
-                                "customer_name"     => $_POST['cus_name'],
-                                "invoice_num"       => $receipt_prefix . date("Hmydis"),
-                                "user_name"         => $this->userdata->name,
-                                "user_id"           => $this->user_id,
-                                "total_amount"      => (float)str_replace(",", "", $_POST['total_amount']),
-                                "vat"               => $_POST['vat_percentage'],
-                                "vat_amount"        => $_POST['vat_amount'],
-                                "discount_type"     => $_POST['discount_type'],
-                                "discount"          => $_POST['discount_amount'],
-                                "subtotal"          => (float)array_sum($_POST['amount']),
-                                "date_sold"         => date("Y-m-d"),
-                                "time_sold"         => date("H:i:s"),
-                                "store_id"          => $this->store_id,
-                                "fulldate"          => date("D jS F, Y  H:ia"),
+                    case "credit":
+                        $sale = [
+                            "customer_id"       => $_POST['cus_id'],
+                            "customer_name"     => $_POST['cus_name'],
+                            "invoice_num"       => $receipt_prefix . date("Hmydis"),
+                            "user_name"         => $this->userdata->name,
+                            "user_id"           => $this->user_id,
+                            "total_amount"      => (float)str_replace(",", "", $_POST['total_amount']),
+                            "vat"               => $_POST['vat_percentage'],
+                            "vat_amount"        => $_POST['vat_amount'],
+                            "discount_type"     => $_POST['discount_type'],
+                            "discount"          => $_POST['discount_amount'],
+                            "subtotal"          => (float)array_sum($_POST['amount']),
+                            "date_sold"         => date("Y-m-d"),
+                            "time_sold"         => date("H:i:s"),
+                            "store_id"          => $this->store_id,
+                            "fulldate"          => date("D jS F, Y  h:i a"),
+                            "salesCount"        => $salesCount  ? $salesCount + 1 : 1
+                        ];
+
+                        $sentSale = $this->storefrontModel->sendCreditSale($sale);
+                        $sale['pending_status'] = 0;
+
+                        $data['sale'] = $sale;
+                        $data['saleID'] = $sentSale;
+
+                        if ($sentSale) {
+                            $postedSale = [
+                                "product_id" => $this->request->getVar("item_id"),
+                                "product" => $this->request->getVar("item"),
+                                "quantity" => $this->request->getVar("quantity"),
+                                "price" => $this->request->getVar("price"),
+                                "amount" => $this->request->getVar("amount"),
                             ];
 
-//                            var_dump($sale);
-//                            echo "<br><p>". var_dump($_POST)."</p>";
-//                            exit;
-
-                            $sentSale = $this->storefrontModel->sendCreditSale($sale);
-                            $sale['pending_status'] = 0;
-
-                            $data['sale'] = $sale;
-                            $data['saleID'] = $sentSale;
-
-                            if ($sentSale) {
-                                $postedSale = [
-                                    "product_id" => $this->request->getVar("item_id"),
-                                    "product" => $this->request->getVar("item"),
-                                    "quantity" => $this->request->getVar("quantity"),
-                                    "price" => $this->request->getVar("price"),
-                                    "amount" => $this->request->getVar("amount"),
+                            for ($i = 0; $i < count($postedSale['product']); $i++) {
+                                $saleDetails = [
+                                    "sales_id" => $sentSale,
+                                    "store_id" => $this->store_id,
+                                    "product" => $postedSale["product"][$i],
+                                    "product_id" => $postedSale["product_id"][$i],
+                                    "quantity" => $postedSale["quantity"][$i],
+                                    "price" => $postedSale["price"][$i],
+                                    "amount" => $postedSale["amount"][$i],
+                                    "date_sold" => $sale['date_sold'],
+                                    "time_sold" => $sale['time_sold']
                                 ];
 
-                                for ($i = 0; $i < count($postedSale['product']); $i++) {
-                                    $saleDetails = [
-                                        "sales_id" => $sentSale,
-                                        "store_id" => $this->store_id,
-                                        "product" => $postedSale["product"][$i],
-                                        "product_id" => $postedSale["product_id"][$i],
-                                        "quantity" => $postedSale["quantity"][$i],
-                                        "price" => $postedSale["price"][$i],
-                                        "amount" => $postedSale["amount"][$i],
-                                        "date_sold" => $sale['date_sold'],
-                                        "time_sold" => $sale['time_sold']
-                                    ];
+                                $queryResponse = $this->storefrontModel->sendCreditSaleDetails($saleDetails);
 
-                                    $queryResponse = $this->storefrontModel->sendCreditSaleDetails($saleDetails);
-
-                                    if ($queryResponse) {
-                                        $data["message"] = "Row Successfully Added";
-                                    } else {
-                                        $data["message"] = "An Error Occurred";
-                                    }
-
+                                if ($queryResponse) {
+                                    $data["message"] = "Row Successfully Added";
+                                } else {
+                                    $data["message"] = "An Error Occurred";
                                 }
 
-                            } else {
-                                $data["message"] = "An Error Occurred";
                             }
 
-                            if (!empty($sale['customer_id'])) {
-                                $customerDetails = $this->customersModel->getCustomer([
-                                    'store_id' => $this->store_id,
-                                    'customer_id' => $sale['customer_id']
-                                ]);
+                        } else {
+                            $data["message"] = "An Error Occurred";
+                        }
 
-                                $data['customerDetails'] = $customerDetails;
-                            }
+                        if (!empty($sale['customer_id'])) {
+                            $customerDetails = $this->customersModel->getCustomer([
+                                'store_id' => $this->store_id,
+                                'customer_id' => $sale['customer_id']
+                            ]);
 
-                            session()->setTempdata('sales_id', $sentSale, '6');
-                            $data['inputs'] = $_POST;
+                            $data['customerDetails'] = $customerDetails;
+                        }
 
-                            return view("credit_receipt", $data);
+                        session()->setTempdata('sales_id', $sentSale, '6');
+                        $data['inputs'] = $_POST;
 
-                        case "pending":
-                            $sale = [
-                                "customer_id"       => $_POST['cus_id'],
-                                "customer_name"     => $_POST['cus_name'],
-                                "receipt_num"       => $receipt_prefix . date("Hmydis"),
-                                "user_name"         => $this->userdata->name,
-                                "user_id"           => $this->user_id,
-                                "total_amount"      => (float)str_replace(",", "", $_POST['total_amount']),
-                                "amount_change"     => $_POST['change'],
-                                "amount_paid"       => $_POST['paid'],
-                                "vat"               => $_POST['vat_percentage'],
-                                "vat_amount"        => $_POST['vat_amount'],
-                                "discount_type"     => $_POST['discount_type'],
-                                "discount"          => $_POST['discount_amount'],
-                                "subtotal"          => (float)array_sum($_POST['amount']),
-                                "date_sold"         => date("Y-m-d"),
-                                "time_sold"         => date("H:i:s"),
-                                "store_id"          => $this->store_id,
-                                "fulldate"          => date("D jS F, Y  H:ia"),
-                                "pending_status"    => 1,
+                        return view("credit_receipt", $data);
+
+                    case "pending":
+                        $sale = [
+                            "customer_id"       => $_POST['cus_id'],
+                            "customer_name"     => $_POST['cus_name'],
+                            "receipt_num"       => $receipt_prefix . date("Hmydis"),
+                            "user_name"         => $this->userdata->name,
+                            "user_id"           => $this->user_id,
+                            "total_amount"      => (float)str_replace(",", "", $_POST['total_amount']),
+                            "amount_change"     => $_POST['change'],
+                            "amount_paid"       => $_POST['paid'],
+                            "vat"               => $_POST['vat_percentage'],
+                            "vat_amount"        => $_POST['vat_amount'],
+                            "discount_type"     => $_POST['discount_type'],
+                            "discount"          => $_POST['discount_amount'],
+                            "subtotal"          => (float)array_sum($_POST['amount']),
+                            "date_sold"         => date("Y-m-d"),
+                            "time_sold"         => date("H:i:s"),
+                            "store_id"          => $this->store_id,
+                            "fulldate"          => date("D jS F, Y  h:i a"),
+                            "pending_status"    => 1,
+                        ];
+
+
+                        $sentSale = $this->storefrontModel->sendSale($sale);
+
+                        $data['sale'] = $sale;
+                        $data['saleID'] = $sentSale;
+
+                        if ($sentSale) {
+                            $postedSale = [
+                                "product_id" => $this->request->getVar("item_id"),
+                                "product" => $this->request->getVar("item"),
+                                "quantity" => $this->request->getVar("quantity"),
+                                "price" => $this->request->getVar("price"),
+                                "amount" => $this->request->getVar("amount"),
                             ];
 
-
-                            $sentSale = $this->storefrontModel->sendSale($sale);
-
-                            $data['sale'] = $sale;
-                            $data['saleID'] = $sentSale;
-
-                            if ($sentSale) {
-                                $postedSale = [
-                                    "product_id" => $this->request->getVar("item_id"),
-                                    "product" => $this->request->getVar("item"),
-                                    "quantity" => $this->request->getVar("quantity"),
-                                    "price" => $this->request->getVar("price"),
-                                    "amount" => $this->request->getVar("amount"),
+                            for ($i = 0; $i < count($postedSale['product']); $i++) {
+                                $saleDetails = [
+                                    "sales_id" => $sentSale,
+                                    "store_id" => $this->store_id,
+                                    "product" => $postedSale["product"][$i],
+                                    "product_id" => $postedSale["product_id"][$i],
+                                    "quantity" => $postedSale["quantity"][$i],
+                                    "price" => $postedSale["price"][$i],
+                                    "amount" => $postedSale["amount"][$i],
+                                    "date_sold" => $sale['date_sold'],
+                                    "time_sold" => $sale['time_sold']
                                 ];
 
-                                for ($i = 0; $i < count($postedSale['product']); $i++) {
-                                    $saleDetails = [
-                                        "sales_id" => $sentSale,
-                                        "store_id" => $this->store_id,
-                                        "product" => $postedSale["product"][$i],
-                                        "product_id" => $postedSale["product_id"][$i],
-                                        "quantity" => $postedSale["quantity"][$i],
-                                        "price" => $postedSale["price"][$i],
-                                        "amount" => $postedSale["amount"][$i],
-                                        "date_sold" => $sale['date_sold'],
-                                        "time_sold" => $sale['time_sold']
-                                    ];
+                                $queryResponse = $this->storefrontModel->sendSaleDetails($saleDetails);
 
-                                    $queryResponse = $this->storefrontModel->sendSaleDetails($saleDetails);
-
-                                    if ($queryResponse) {
-                                        $data["message"] = "Row Successfully Added";
-                                    } else {
-                                        $data["message"] = "An Error Occurred";
-                                    }
-
+                                if ($queryResponse) {
+                                    $data["message"] = "Row Successfully Added";
+                                } else {
+                                    $data["message"] = "An Error Occurred";
                                 }
 
-                            } else {
-                                $data["message"] = "An Error Occurred";
                             }
 
-                            if (!empty($sale['customer_id'])) {
-                                $customerDetails = $this->customersModel->getCustomer([
-                                    'store_id' => $this->store_id,
-                                    'customer_id' => $sale['customer_id']
-                                ]);
+                        } else {
+                            $data["message"] = "An Error Occurred";
+                        }
 
-                                $data['customerDetails'] = $customerDetails;
-                            }
+                        if (!empty($sale['customer_id'])) {
+                            $customerDetails = $this->customersModel->getCustomer([
+                                'store_id' => $this->store_id,
+                                'customer_id' => $sale['customer_id']
+                            ]);
 
-                            session()->setTempdata('sales_id', $sentSale, '6');
+                            $data['customerDetails'] = $customerDetails;
+                        }
 
-                            $data['inputs'] = $_POST;
+                        session()->setTempdata('sales_id', $sentSale, '6');
 
-                            return view("sales_receipt", $data);
-                    }
+                        $data['inputs'] = $_POST;
+
+                        return view("sales_receipt", $data);
+                }
 
 
 
@@ -562,7 +568,10 @@
                                                 "product_id" => $saleDetails['product_id']
                                             ];
 
-                                            $former_quantity = $postedSale['former_quantity'][$i];
+                                            $former_quantity = (array_key_exists(
+                                                $i,
+                                                $postedSale['former_quantity']
+                                            )) ? $postedSale['former_quantity'][$i] : 0;
 
                                             $queryResponse = $this->storefrontModel->updateSaleDetails($clause, $saleDetails, $former_quantity);
 
@@ -611,6 +620,7 @@
                                         "time_sold" => date("H:i:s"),
                                         "store_id" => $this->store_id,
                                         "fulldate" => date("D jS F, Y  H:ia"),
+                                        "sale_close_date" => date("Y-m-d").",".date("H:ia"),
                                         "pending_status" => 0,
                                     ];
 
@@ -652,7 +662,10 @@
                                                 "product_id" => $saleDetails['product_id']
                                             ];
 
-                                            $former_quantity = $postedSale['former_quantity'][$i];
+                                            $former_quantity = (array_key_exists(
+                                                $i,
+                                                $postedSale['former_quantity']
+                                            )) ? $postedSale['former_quantity'][$i] : 0;
 
                                             $queryResponse = $this->storefrontModel->updateSaleDetails($clause, $saleDetails, $former_quantity);
 
@@ -809,9 +822,9 @@
         /**
          * @param string $what
          * @param $id
-         * @return RedirectResponse | string
+         * @return string
          */
-        public function print(string $what , $id) {
+        public function print(string $what , $id): string {
 
             switch ($what) {
                 case "receipt":
@@ -870,7 +883,7 @@
             return view("error/error_page");
         }
 
-        public function test() {
+        public function test(): string {
 
 //            echo hash("md5",hash("md5","codingfreaks123") . hash("md4","codingfreaks123"));
 //            echo $this->productsModel->getBarcode($this->store_id,14);
@@ -878,7 +891,12 @@
 //            if (isset($_POST)){
 //                print_r($_POST);
 //            }
-
+            $salesCount = $this->storefrontModel->getSalesCount([
+                "date_sold" => date("Y-m-d"),
+                "store_id" => "benney5fd19d133eedd_202012121653335fd549ed9b014"
+            ]);
+            echo $salesCount;
+            exit;
             return view("password_reset_email");
         }
 

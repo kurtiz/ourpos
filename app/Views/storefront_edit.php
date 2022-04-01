@@ -272,11 +272,8 @@
                                                 <select id="customer_select" class="form-control select2">
                                                     <option value="">select customer</option>
                                                     <?php foreach ($customers as $row): ?>
-                                                        <option
-                                                            <?php
-
-                                                            ?>
-                                                                value="<?= $row['customer_id'] ?>,<?= $row['customer_name'] ?>">
+                                                        <option value="<?= $row['customer_id'] ?>,<?= $row['customer_name'] ?>"
+                                                            <?=($sale->customer_id == $row["customer_id"])? "selected" : ""?>>
                                                             <span><?= $row['customer_name'] ?></span> :
                                                             <span><?= $row['mobile'] ?></span>
                                                         </option>

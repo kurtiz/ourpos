@@ -10,20 +10,16 @@
         <link rel="icon" href="<?= base_url(); ?>/public/favicon.ico" type="image/x-icon"/>
         <title>Print Receipt</title>
     </head>
+
+     <body onload="print();" onafterprint="
     <?php
-    // echo $overall;
-    ?>
-    <!-- -->
-    <body onload="print();" onafterprint="
-    <?php
-        if(session()->getTempdata("uri") != null || session()->getTempdata("uri") != ""){
-            echo "window.location.assign(". session()->getTempdata("uri") . ")";
+        if(session()->getTempdata("uri_referer") != null || session()->getTempdata("uri_referer") != ""){
+            echo "window.location.assign('". session()->getTempdata("uri_referer") . "')";
         }else {
             echo "window.history.back()";
         }
     ?>
     ">
-
 
     <style>
         ::moz-selection {
@@ -135,12 +131,13 @@
     </style>
 
     <div class="info" style="text-align: center;">
-        <?php if (!empty($store_data->logo)): ?>
-            <img src="<?= $store_data->logo ?>" width="100px" alt="" srcset="">
-        <?php else: ?>
-            <img src="<?= base_url() ?>/public/src/img/brand.png" width="100px" alt="" srcset="">
-        <?php endif; ?>
-
+        <?php if ($store_data->logoDisplay == "on"):?>
+            <?php if (!empty($store_data->logo)): ?>
+                <img src="<?= $store_data->logo ?>" width="100px" alt="" srcset="">
+            <?php else: ?>
+                <img src="<?= base_url() ?>/public/src/img/brand.png" width="100px" alt="" srcset="">
+            <?php endif; ?>
+    <?php endif;?>
         <p>
         <?php if (strlen($store_data->store_name)< 30):?>
             <h1>
@@ -156,19 +153,26 @@
 
     <div id="mid">
         <div style="text-align: center;" class="info">
+        <?php if($receipt->salesCount == "on"):?>
+            <h2 style="font-size:2em">
+                    Order No: <?=$receipt->salesCount?>
+            </h2>
+        <?php endif;?>
             <h2 style="font-size:1em">
-                <?php if (session()->get("what")=="receipt"){
-                    echo "Receipt No.:";
-                }else if (session()->get("what")=="invoice"){
-                    echo "Invoice No.:";
-                } ?>
                 <?php
-                if (isset($receipt->receipt_num)){
-                    echo $receipt->receipt_num;
-                }else {
-                    echo $receipt->invoice_num;
-                }
-                    ?>
+                    if (session()->get("what")=="receipt"){
+                        echo "Receipt No.:";
+                    }else if (session()->get("what")=="invoice"){
+                        echo "Invoice No.:";
+                    }
+                ?>
+                <?php
+                    if (isset($receipt->receipt_num)){
+                        echo $receipt->receipt_num;
+                    }else {
+                        echo $receipt->invoice_num;
+                    }
+                ?>
             </h2>
             <?= $receipt->fulldate ?>
             <div class="contact">

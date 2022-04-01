@@ -40,14 +40,23 @@
 
 //echo hash("md5", hash("md5","codingfreaks123") . hash("md4","codingfreaks123"));
 ?>
-!DOCTYPE
+<!--!DOCTYPE-->
+<!--<html>-->
+<!--<body>-->
+<!--<form method="post">-->
+<!--    <input type="text" name="name" value="aaron"/>-->
+<!--    <input type="text" name="age" value="65"/>-->
+<!--    <input type="text" name="class" value="form 2"/>-->
+<!--    <input type="submit" name="submit"/>-->
+<!--</form>-->
+<!--</body>-->
+<!--</html>-->
+
+<!doctype html>
 <html>
+<head>Test QR Code</head>
 <body>
-<form method="post">
-    <input type="text" name="name" value="aaron"/>
-    <input type="text" name="age" value="65"/>
-    <input type="text" name="class" value="form 2"/>
-    <input type="submit" name="submit"/>
-</form>
+<div id="brcode>"></div>
 </body>
+<script src="<?=base_url()?>/public/">
 </html>

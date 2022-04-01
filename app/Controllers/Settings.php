@@ -87,7 +87,9 @@ class Settings extends Controller {
                 "vat" => $this->request->getVar("storeVatPercentage", FILTER_SANITIZE_STRING),
                 "discount" => $this->request->getVar("storeDiscount", FILTER_SANITIZE_STRING),
                 "barcode" => $this->request->getVar("storeBarcode", FILTER_SANITIZE_STRING),
-                "vat_status" => $this->request->getVar("storeVat", FILTER_SANITIZE_STRING)
+                "vat_status" => $this->request->getVar("storeVat", FILTER_SANITIZE_STRING),
+                "salesCount" => $this->request->getVar("storeSalesCount", FILTER_SANITIZE_STRING),
+                "logoDisplay" => $this->request->getVar("storeLogoDisplay", FILTER_SANITIZE_STRING)
             ];
 
             if($this->storeModel->updateStoreData($this->store_id, $store_settings)){

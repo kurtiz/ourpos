@@ -156,6 +156,7 @@
                                                 </div>
 
                                             </div>
+
                                             <div class="col-md-6 <?=($storedata->vat_status == "on")? "" : "hidden" ?>" id="vat_percentage" >
                                                 <div class="form-group">
                                                     <label>Vat %</label>
@@ -169,7 +170,7 @@
 
                                         <div class="row">
 
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div data-toggle="tooltip" data-placement="top"
                                                      title="Toggle to enable Discounts when making sales"
                                                      class="form-group">
@@ -180,7 +181,7 @@
                                             </div>
 
 
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div data-toggle="tooltip" data-placement="top"
                                                      title="Toggle to enable search with barcode scanner when making sales"
                                                      class="form-group">
@@ -190,7 +191,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-4">
+                                            <div class="col-md-3">
                                                 <div data-toggle="tooltip" data-placement="top"
                                                      title="Toggle to enable VAT when making sales"
                                                      class="form-group">
@@ -199,6 +200,28 @@
                                                            class="js-success" <?= $storedata->vat_status == "on" ? "checked" : "" ?>/>
                                                 </div>
                                             </div>
+
+                                            <div class="col-md-3">
+                                                <div data-toggle="tooltip" data-placement="top"
+                                                     title="Toggle to enable sales counts printed on receipts"
+                                                     class="form-group">
+                                                    <label for="js-success">Sales Count</label>
+                                                    <input type="checkbox" id="salesCount" name="storeSalesCount"
+                                                           class="js-success" <?= $storedata->salesCount == "on" ? "checked" : "" ?>/>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row">
+
+                                            <div class="col-md-3">
+                                                <div data-toggle="tooltip" data-placement="top"
+                                                     title="Toggle to enable Logo to show on receipt"
+                                                     class="form-group">
+                                                    <label for="js-success">Logo On Receipt</label>
+                                                    <input type="checkbox" id="logoDisplay" class="js-success" name="storeLogoDisplay"
+                                                        <?= $storedata->logoDisplay == "on" ? "checked" : "" ?>/>
 
                                         </div>
                                     </form>
@@ -239,8 +262,8 @@
         //instantiating plugins {switchery: for the switch button}
         $(document).ready(function () {
             //*** switchery instantiating ***//
-            let x = Array("#vat", "#discount", "#bc_search");
-            for (let i = 0; i < 3; i++) {
+            let x = Array("#vat", "#discount", "#bc_search", "#salesCount", "#logoDisplay");
+            for (let i = 0; i < x.length; i++) {
                 var elemprimary = document.querySelector(x[i]);
                 var switchery = new Switchery(elemprimary, {
                     color: '#2ed8b6',
