@@ -41,7 +41,7 @@ $RECYCLE.BIN/
 #-------------------------
 # These should never be under version control,
 # as it poses a security risk.
-app/.env
+#app/.env
 .vagrant
 Vagrantfile
 
@@ -126,5 +126,5 @@ nb-configuration.xml
 /.phpunit.*.cache
 
 public/uploads
-.htaccess
-app/Config/App.php
+#.htaccess
+#app/Config/App.php
