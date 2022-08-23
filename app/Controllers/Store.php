@@ -885,19 +885,20 @@
 
         public function test(): string {
 
-//            echo hash("md5",hash("md5","codingfreaks123") . hash("md4","codingfreaks123"));
+        //    echo hash("gost-crypto",hash("md5","cecil2022") . hash("md4","cecil2022"));
 //            echo $this->productsModel->getBarcode($this->store_id,14);
 
 //            if (isset($_POST)){
 //                print_r($_POST);
 //            }
-            $salesCount = $this->storefrontModel->getSalesCount([
-                "date_sold" => date("Y-m-d"),
-                "store_id" => "benney5fd19d133eedd_202012121653335fd549ed9b014"
-            ]);
-            echo $salesCount;
-            exit;
-            return view("password_reset_email");
+            // $salesCount = $this->storefrontModel->getSalesCount([
+            //     "date_sold" => date("Y-m-d"),
+            //     "store_id" => "benney5fd19d133eedd_202012121653335fd549ed9b014"
+            // ]);
+            // echo $salesCount;
+            // exit;
+            // return view("password_reset_email");
+            return "";
         }
 
     }

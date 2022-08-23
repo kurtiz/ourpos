@@ -817,7 +817,7 @@ function discount(tableTotal) {
  * @param id the id of the row to be deleted
  */
 function deleteRow(id) {
-    // deletes the the row by the id
+    // deletes the row by the id
     $('#row' + id + '').remove();
 
     // calculates the overall total

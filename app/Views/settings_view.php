@@ -14,8 +14,8 @@
 
         <link rel="icon" href="<?= base_url(); ?>/public/favicon.ico" type="image/x-icon"/>
 
-        <link rel="manifest" href="<?=base_url(); ?>/public/manifest.json">
-        <link rel="apple-touch-icon"href="<?php base_url(); ?>public/favicon.ico" type="image/x-icon" />
+        <link rel="manifest" href="<?= base_url(); ?>/public/manifest.json">
+        <link rel="apple-touch-icon" href="<?php base_url(); ?>public/favicon.ico" type="image/x-icon"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="theme-color" content="#404E67"/>
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -86,14 +86,17 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
-                                <div class="card-header"><h3>Settings</h3></div>
+                                <div class="card-header">
+                                    <h3>Settings</h3>
+                                </div>
                                 <div class="card-body">
                                     <form method="post" id="settings-form">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label>Store Name</label>
-                                                    <input disabled type="text" data-toggle="tooltip" data-placement="top"
+                                                    <input disabled type="text" data-toggle="tooltip"
+                                                           data-placement="top"
                                                            title="Name of the store" class="form-control"
                                                            placeholder="Omega Super Market" id="store_name"
                                                            name="storeName"
@@ -117,8 +120,10 @@
                                                 <div class="form-group">
                                                     <label>Phone</label>
                                                     <input data-toggle="tooltip" data-placement="top" id="store_mobile"
-                                                           title="Phone contact number for the store" disabled type="text"
-                                                           class="form-control" placeholder="024 587 1456" name="storeMobile"
+                                                           title="Phone contact number for the store" disabled
+                                                           type="text"
+                                                           class="form-control" placeholder="024 587 1456"
+                                                           name="storeMobile"
                                                            value="<?= $storedata->mobile ?>">
                                                 </div>
                                             </div>
@@ -126,8 +131,10 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Fax</label>
-                                                    <input disabled type="text" data-toggle="tooltip" data-placement="top"
-                                                           title="Fax number for the store" class="form-control" name="storeFax"
+                                                    <input disabled type="text" data-toggle="tooltip"
+                                                           data-placement="top"
+                                                           title="Fax number for the store" class="form-control"
+                                                           name="storeFax"
                                                            placeholder="" value="<?= $storedata->fax ?>">
                                                 </div>
                                             </div>
@@ -137,7 +144,8 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label>Email</label>
-                                                    <input disabled type="text" data-toggle="tooltip" data-placement="top"
+                                                    <input disabled type="text" data-toggle="tooltip"
+                                                           data-placement="top"
                                                            title="Email contact of the store" class="form-control"
                                                            id="store_email" name="storeEmail"
                                                            placeholder="" value="<?= $storedata->email ?>">
@@ -149,20 +157,25 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Receipt Prefix</label>
-                                                    <input disabled type="text" data-toggle="tooltip" data-placement="top"
+                                                    <input disabled type="text" data-toggle="tooltip"
+                                                           data-placement="top"
                                                            title="This is the phrase or keyword added to the receipt number to uniquely identify you shop's receipt numbers"
-                                                           class="form-control form-control-uppercase" placeholder="RCP" id="rc_prefix" name="storePrefix"
+                                                           class="form-control form-control-uppercase" placeholder="RCP"
+                                                           id="rc_prefix" name="storePrefix"
                                                            value="<?= $storedata->receipt_prefix ?>">
                                                 </div>
 
                                             </div>
 
-                                            <div class="col-md-6 <?=($storedata->vat_status == "on")? "" : "hidden" ?>" id="vat_percentage" >
+                                            <div class="col-md-6 <?= ($storedata->vat_status == "on") ? "" : "hidden" ?>"
+                                                 id="vat_percentage">
                                                 <div class="form-group">
                                                     <label>Vat %</label>
-                                                    <input disabled type="number" data-toggle="tooltip" data-placement="top"
+                                                    <input disabled type="number" data-toggle="tooltip"
+                                                           data-placement="top"
                                                            title="VAT percentage applied to the sales"
-                                                           class="form-control" placeholder="10" name="storeVatPercentage"
+                                                           class="form-control" placeholder="10"
+                                                           name="storeVatPercentage"
                                                            value="<?= $storedata->vat ?>">
                                                 </div>
                                             </div>
@@ -174,8 +187,9 @@
                                                 <div data-toggle="tooltip" data-placement="top"
                                                      title="Toggle to enable Discounts when making sales"
                                                      class="form-group">
-                                                    <label for="js-success">Discount</label>
-                                                    <input type="checkbox" id="discount" class="js-success" name="storeDiscount"
+                                                    <label for="discount">Discount</label>
+                                                    <input type="checkbox" id="discount" class="js-success"
+                                                           name="storeDiscount"
                                                         <?= $storedata->discount == "on" ? "checked" : "" ?>/>
                                                 </div>
                                             </div>
@@ -185,8 +199,9 @@
                                                 <div data-toggle="tooltip" data-placement="top"
                                                      title="Toggle to enable search with barcode scanner when making sales"
                                                      class="form-group">
-                                                    <label for="js-success">Barcode Search</label>
-                                                    <input type="checkbox" id="bc_search" class="js-success" name="storeBarcode"
+                                                    <label for="bc_search">Barcode Search</label>
+                                                    <input type="checkbox" id="bc_search" class="js-success"
+                                                           name="storeBarcode"
                                                         <?= $storedata->barcode == "on" ? "checked" : "" ?>/>
                                                 </div>
                                             </div>
@@ -195,7 +210,7 @@
                                                 <div data-toggle="tooltip" data-placement="top"
                                                      title="Toggle to enable VAT when making sales"
                                                      class="form-group">
-                                                    <label for="js-success">Vat</label>
+                                                    <label for="storeVat">Vat</label>
                                                     <input type="checkbox" id="vat" name="storeVat"
                                                            class="js-success" <?= $storedata->vat_status == "on" ? "checked" : "" ?>/>
                                                 </div>
@@ -205,7 +220,7 @@
                                                 <div data-toggle="tooltip" data-placement="top"
                                                      title="Toggle to enable sales counts printed on receipts"
                                                      class="form-group">
-                                                    <label for="js-success">Sales Count</label>
+                                                    <label for="salesCount">Sales Count</label>
                                                     <input type="checkbox" id="salesCount" name="storeSalesCount"
                                                            class="js-success" <?= $storedata->salesCount == "on" ? "checked" : "" ?>/>
                                                 </div>
@@ -214,20 +229,38 @@
                                         </div>
 
                                         <div class="row">
-
                                             <div class="col-md-3">
                                                 <div data-toggle="tooltip" data-placement="top"
                                                      title="Toggle to enable Logo to show on receipt"
                                                      class="form-group">
-                                                    <label for="js-success">Logo On Receipt</label>
-                                                    <input type="checkbox" id="logoDisplay" class="js-success" name="storeLogoDisplay"
+                                                    <label for="logoDisplay">Logo On Receipt</label>
+                                                    <input type="checkbox" id="logoDisplay" class="js-success"
+                                                           name="storeLogoDisplay"
                                                         <?= $storedata->logoDisplay == "on" ? "checked" : "" ?>/>
 
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <div data-toggle="tooltip" data-placement="top"
+                                                     title="Toggle to enable Notes when selling in storefront"
+                                                     class="form-group">
+                                                    <label for="noteDisplay">Notes In Store Front</label>
+                                                    <input type="checkbox" id="noteDisplay" class="js-success"
+                                                           name="storeNoteDisplay"
+                                                        <?= $storedata->noteDisplay == "on" ? "checked" : "" ?>/>
+
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
 
-                                    <button id="editBtn" type="button" class="btn btn-success">Edit</button>
-                                    <button id="submitBtn" type="button" style="display: none" class="btn btn-success">Submit</button>
+                                    <button id="editBtn" type="button" class="btn btn-success">
+                                        Edit
+                                    </button>
+                                    <button id="submitBtn" type="button" style="display: none" class="btn btn-success">
+                                        Submit
+                                    </button>
 
                                 </div>
                             </div>
@@ -253,163 +286,8 @@
     <script src="<?= base_url(); ?>/public/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
     <script src="<?= base_url(); ?>/public/plugins/jquery-toast-plugin/dist/jquery.toast.min.js"></script>
     <script src="<?= base_url(); ?>/public/plugins/mohithg-switchery/dist/switchery.min.js"></script>
+    <script src="<?= base_url(); ?>/public/js/settings.js"></script>
     <script>
-        let form = $("#settings-form")
-        form.on("submit", function (){
-            loading_overlay(1)
-        })
-
-        //instantiating plugins {switchery: for the switch button}
-        $(document).ready(function () {
-            //*** switchery instantiating ***//
-            let x = Array("#vat", "#discount", "#bc_search", "#salesCount", "#logoDisplay");
-            for (let i = 0; i < x.length; i++) {
-                var elemprimary = document.querySelector(x[i]);
-                var switchery = new Switchery(elemprimary, {
-                    color: '#2ed8b6',
-                    jackColor: '#fff'
-                });
-            }
-            //*** End switchery instantiating ***//
-        });
-
-        $('#vat').on("change", function () {
-                //checking the value of the switch button
-                if ($(this).prop("checked") === false) {
-                    $("#vat_percentage").slideUp(
-                        function () {
-                            $("#vat_percentage").hide()
-                        }
-                    )
-
-                }else if($(this).prop("checked") === true){
-                    // $("#vat_percentage").show()
-                    let classes = $("#vat_percentage").prop("class")
-                    $("#vat_percentage").prop("class", classes.replace("hidden", ""))
-                    $("#vat_percentage").slideDown()
-                }
-            }
-        )
-
-
-        let editBtn = $("#editBtn")
-        let inputText = $("#settings-form input")
-        let inputTextArea = $("#settings-form textarea")
-        let submitBtn = $("#submitBtn")
-        let storeName = $("#store_name")
-        let storeMobile = $("#store_mobile")
-        let storeEmail = $("#store_email")
-        let storeVat = $("#rc_prefix")
-
-        editBtn.on("click", function(){
-            if (editBtn.text() === "Edit") {
-                editBtn.removeClass("btn-success");
-                editBtn.addClass("btn-danger");
-                editBtn.text("Cancel");
-                submitBtn.show();
-
-                inputText.prop("disabled", false)
-                inputTextArea.prop("disabled", false)
-            }else {
-                editBtn.removeClass("btn-danger");
-                editBtn.addClass("btn-success");
-                editBtn.text("Edit");
-                submitBtn.hide();
-
-                inputText.prop("disabled", true)
-                inputTextArea.prop("disabled", true)
-            }
-
-        })
-
-        submitBtn.on("click", function() {
-            if (storeName.val() === "") {
-                $.toast({
-                    text: 'Store name must not be empty!',
-                    showHideTransition: 'fade',
-                    icon: 'error',
-                    position: "top-right",
-                    bgColor: '#f5365c',
-                    textColor: 'white'
-                })
-
-                if(storeName.hasClass("form-control-success")){
-                    storeName.removeClass("form-control-success")
-                    storeName.addClass("form-control-danger")
-                }
-
-                storeName.addClass("form-control-danger")
-                storeName.focus()
-
-            } else if(storeName.hasClass('form-control-danger')) {
-
-                storeName.removeClass("form-control-danger")
-                storeName.addClass("form-control-success")
-
-            }
-
-            if (storeMobile.val() === ""){
-                $.toast({
-                    text: 'Phone must not be empty!',
-                    showHideTransition: 'fade',
-                    icon: 'error',
-                    position: "top-right",
-                    bgColor: '#f5365c',
-                    textColor: 'white'
-                })
-
-                if(storeMobile.hasClass("form-control-success")){
-                    storeMobile.removeClass("form-control-success")
-                    storeMobile.addClass("form-control-danger")
-                }
-
-                storeMobile.addClass("form-control-danger")
-
-                if (!storeName.hasClass('form-control-danger')) {
-                    storeMobile.focus()
-                }
-            } else if(storeMobile.hasClass('form-control-danger')) {
-
-                storeMobile.removeClass("form-control-danger")
-                storeMobile.addClass("form-control-success")
-
-            }
-
-            if (storeEmail.val() === ""){
-                $.toast({
-                    text: 'Email must not be empty!',
-                    showHideTransition: 'fade',
-                    icon: 'error',
-                    position: "top-right",
-                    bgColor: '#f5365c',
-                    textColor: 'white'
-                })
-
-                if(storeEmail.hasClass("form-control-success")){
-                    storeEmail.removeClass("form-control-success")
-                    storeEmail.addClass("form-control-danger")
-                }
-
-                storeEmail.addClass("form-control-danger")
-
-                if(!storeMobile.hasClass('form-control-danger')){
-                    storeEmail.focus()
-                }
-
-            } else if(storeEmail.hasClass('form-control-danger')) {
-
-                storeEmail.removeClass("form-control-danger")
-                storeEmail.addClass("form-control-success")
-
-            }
-
-            if(storeName !== "" && storeMobile !== "" && storeEmail !== ""){
-                loading_overlay(1)
-                form.submit()
-            }
-
-        })
-
         <?php
         if (!empty(session()->getTempdata('success'))):
         ?>
