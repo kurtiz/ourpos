@@ -1,4 +1,25 @@
-let form = $("#settings-form")
+let taxesBtn = $("#taxesBtn"),
+    editTaxesBtn = $("#editTaxes_btn"),
+    editBtn = $("#editBtn"),
+    inputText = $("#settings-form input"),
+    inputTextTax = $(".tax-input"),
+    inputTextArea = $("#settings-form textarea"),
+    submitBtn = $("#submitBtn"),
+    storeName = $("#store_name"),
+    storeMobile = $("#store_mobile"),
+    storeEmail = $("#store_email"),
+    storeVat = $("#rc_prefix"),
+    taxStatusSelect = $(".tax-status-select"),
+    taxDelete = $(".tax-delete"),
+    taxAdd = $("#addTax"),
+    taxesForm = $("#taxes_form"),
+    taxesFormRepeater = $("#taxes_form_repeater"),
+    taxes = $("#taxesTxt"),
+    taxTitles = [],
+    taxValues = [],
+    taxStatuses = [],
+
+form = $("#settings-form")
 form.on("submit", function () {
     loading_overlay(1)
 })
@@ -12,26 +33,35 @@ $(document).ready(function () {
             color: '#4099ff',
             jackColor: '#fff'
         });
-    });
-    // let x = Array("#vat", "#discount", "#bc_search", "#salesCount", "#logoDisplay");
-    // for (let i = 0; i < x.length; i++) {
-    //     var elemprimary = document.querySelector(x[i]);
-    //     var switchery = new Switchery(elemprimary, {
-    //         color: '#2ed8b6',
-    //         jackColor: '#fff'
-    //     });
-    // }
-    //*** End switchery instantiating ***//
+    })
+
+    $('#taxes').tagsinput('items');
+    $('.tax-status-select').select2();
+
 });
+
+function updateTax(){
+    let tTiles = $(".tax-title")
+    let tValues = $(".tax-value")
+    let tStatuses = $(".tax-status")
+    let taxObject = {}
+    for (let i = 1; i < tTiles.length; i++){
+        taxObject[tTiles[i].value] = {
+            value: tValues[i].value,
+            status: tStatuses[i].value
+        }
+        taxes.val(JSON.stringify(taxObject))
+    }
+}
 
 $('#vat').on("change",
     function () {
         //checking the value of the switch button
         let vat_percentage_element = $("#vat_percentage")
         if ($(this).prop("checked") === false) {
-            $("#vat_percentage").slideUp(
+            vat_percentage_element.slideUp(
                 function () {
-                    $("#vat_percentage").hide()
+                    vat_percentage_element.hide()
                 }
             )
 
@@ -43,15 +73,23 @@ $('#vat').on("change",
     }
 )
 
-
-let editBtn = $("#editBtn")
-let inputText = $("#settings-form input")
-let inputTextArea = $("#settings-form textarea")
-let submitBtn = $("#submitBtn")
-let storeName = $("#store_name")
-let storeMobile = $("#store_mobile")
-let storeEmail = $("#store_email")
-let storeVat = $("#rc_prefix")
+$('#otherTaxes').on("change",
+    function () {
+        //checking the value of the switch button
+        let taxes_element = $("#taxes_element")
+        if ($(this).prop("checked") === false) {
+            taxes_element.slideUp(
+                function () {
+                    taxes_element.hide()
+                }
+            )
+        } else if ($(this).prop("checked") === true) {
+            let classes = taxes_element.prop("class")
+            taxes_element.prop("class", classes.replace("hidden", ""))
+            taxes_element.slideDown()
+        }
+    }
+)
 
 editBtn.on("click", function () {
     if (editBtn.text() === "Edit") {
@@ -61,15 +99,26 @@ editBtn.on("click", function () {
         submitBtn.show();
 
         inputText.prop("disabled", false)
+        inputTextTax.prop("disabled", false)
         inputTextArea.prop("disabled", false)
+        taxStatusSelect.prop("disabled", false)
+        taxDelete.prop("disabled", false)
     } else {
         editBtn.removeClass("btn-danger");
         editBtn.addClass("btn-success");
         editBtn.text("Edit");
+        taxesForm.slideUp(
+            function () {
+                taxesForm.hide()
+            }
+        )
         submitBtn.hide();
 
         inputText.prop("disabled", true)
+        inputTextTax.prop("disabled", true)
         inputTextArea.prop("disabled", true)
+        taxStatusSelect.prop("disabled", true)
+        taxDelete.prop("disabled", true)
     }
 
 })
@@ -157,7 +206,72 @@ submitBtn.on("click", function () {
 
     if (storeName !== "" && storeMobile !== "" && storeEmail !== "") {
         loading_overlay(1)
+        updateTax()
         form.submit()
     }
-
 })
+
+taxesBtn.on("click", function () {
+    if (taxesForm.prop("style").display !== "none") {
+        taxesForm.slideUp(
+            function () {
+                taxesForm.hide()
+            }
+        )
+    } else {
+        taxesForm.slideDown(
+            function () {
+                taxesForm.show()
+            }
+        )
+        taxesForm.slideDown()
+    }
+})
+
+taxAdd.on("click", function () {
+    taxesFormRepeater.append($(".data-repeater-item").eq(0).clone().show())
+})
+
+$(document).on("click","button.tax-delete", function() {
+    let parent = $(this).parent().parent().parent()
+    parent.slideUp(
+        function () {
+            parent.remove()
+        }
+    )
+})
+
+// TODO complete and fix form repeater bug
+// taxesFormRepeater.repeater({
+//     // (Optional)
+//     // "defaultValues" sets the values of added items.  The keys of
+//     // defaultValues refer to the value of the input's name attribute.
+//     // If a default value is not specified for an input, then it will
+//     // have its value cleared.
+//     defaultValues: {
+//         'text-input': 'foo'
+//     },
+//     // (Optional)
+//     // "show" is called just after an item is added.  The item is hidden
+//     // at this point.  If a show callback is not given the item will
+//     // have $(this).show() called on it.
+//     show: function() {
+//         $(this).slideDown();
+//     },
+//     // (Optional)
+//     // "hide" is called when a user clicks on a data-repeater-delete
+//     // element.  The item is still visible.  "hide" is passed a function
+//     // as its first argument which will properly remove the item.
+//     // "hide" allows for a confirmation step, to send a delete request
+//     // to the server, etc.  If a hide callback is not given the item
+//     // will be deleted.
+//     hide: function(deleteElement) {
+//         if (confirm('Are you sure you want to delete this element?')) {
+//             $(this).slideUp(deleteElement);
+//         }
+//     },
+//     // (Optional)
+//     // Removes the delete button from the first list item,
+//     // defaults to false.
+//     isFirstItemUndeletable: true
+// });

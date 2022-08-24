@@ -2,12 +2,12 @@
     <div class="w-100 clearfix">
         <span class="text-center text-sm-left d-md-inline-block">
             Copyright © <?=date("Y")?>
-            <a href="#" class="text-blue" target="_blank">Our Technologies</a>
+            <a href="javascript:void(0)" class="text-blue" target="_blank">Our Technologies</a>
             All Rights Reserved.
         </span>
         <span class="float-none float-sm-right mt-1 mt-sm-0 text-center">
             Developed with <i class="fa fa-heart text-danger"></i> by
-            <a href="#" class="text-green" target="https://aaron.ourtechnologies.org/">
+            <a href="https://aaron.ourtechnologies.org/" class="text-green" target="_blank">
                 Papilio Technologies
             </a>
         </span>
