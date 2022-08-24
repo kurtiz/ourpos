@@ -1,8 +1,13 @@
-//instantiating plugins {switchery: for the switch button, select2, for the select with search box}
+/*
+instantiating plugins {
+    switchery: for the switch button,
+    select2, for the select with search box
+}
+*/
 $(document).ready(function() {
     //*** switchery instantiating ***//
-    var elemprimary = document.querySelector('#js-success');
-    var switchery = new Switchery(elemprimary, {
+    let elemprimary = document.querySelector('#js-success');
+    let switchery = new Switchery(elemprimary, {
         color: '#2ed8b6',
         jackColor: '#fff'
     });
@@ -11,9 +16,33 @@ $(document).ready(function() {
     //*** Select2 instantiating ***//
     $('#product_select').select2();
     $('#customer_select').select2();
+    $('#categories_select').select2();
     //*** End Select2 instantiating ***//
 });
 
+
+// Filter by Categories
+$('#categories_select').on("change", function () {
+    let filter = this.value
+    let productCards = Array.prototype.slice.call(document.querySelectorAll('.it-card'));
+    productCards.forEach(function (card) {
+        if (filter === "") {
+            if (!card.classList.contains(`category-${filter}`)) {
+                card.style.display = "none"
+            } else {
+                card.style.display = ""
+            }
+        } else if (filter === "*") {
+            card.style.display = ""
+        } else {
+            if (!card.classList.contains(`category-${filter}`)) {
+                card.style.display = "none"
+            } else {
+                card.style.display = ""
+            }
+        }
+    })
+})
 
 //*** Vat Toggle ***//
 $('#js-success').on("change", function() {

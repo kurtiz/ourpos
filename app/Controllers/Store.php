@@ -133,6 +133,7 @@
              * @array $data['products'] sends the data of all the products from this store
              */
             $data['products'] = $this->productsModel->getProducts((string)$this->store_id);
+            $data['categories'] = $this->productsModel->getCategories((string)$this->store_id);
 
             $clause = [
                 "store_id" => $this->store_id,
@@ -150,7 +151,7 @@
              */
             if ($this->request->getMethod() == "post"){
                 $data['post'] = $_POST;
-                session()->setTempdata( "uri_referer",base_url()."/store", "10");
+                session()->setTempdata( "uri_referer",base_url()."/store", "10000000");
 
                 $salesCount = $this->storefrontModel->getSalesCount([
                     "date_sold" => date("Y-m-d"),
@@ -158,32 +159,35 @@
                 ]);
 
                 $receipt_prefix = (empty($this->store_data->receipt_prefix)) ? $this->store_data->receipt_prefix : "OPS";
-                switch($_POST['sale_type']) {
+                switch($this->request->getVar('sale_type')) {
                     case "direct":
                         $sale = [
-                            "customer_id"       => $_POST['cus_id'],
-                            "customer_name"     => $_POST['cus_name'],
+                            "customer_id"       => $this->request->getVar('cus_id' ,FILTER_SANITIZE_STRING),
+                            "customer_name"     => $this->request->getVar('cus_name' ,FILTER_SANITIZE_STRING),
                             "receipt_num"       => $receipt_prefix . date("Hmydis"),
                             "user_name"         => $this->userdata->name,
                             "user_id"           => $this->user_id,
-                            "total_amount"      => (float)str_replace(",", "", $_POST['total_amount']),
-                            "amount_change"     => $_POST['change'],
-                            "amount_paid"       => $_POST['paid'],
-                            "vat"               => $_POST['vat_percentage'],
-                            "vat_amount"        => $_POST['vat_amount'],
-                            "discount_type"     => $_POST['discount_type'],
-                            "discount"          => $_POST['discount_amount'],
-                            "subtotal"          => (float)array_sum($_POST['amount']),
+                            "total_amount"      => (float)str_replace(",", "", $this->request->getVar('total_amount', FILTER_SANITIZE_STRING)),
+                            "amount_change"     => $this->request->getVar('change', FILTER_SANITIZE_STRING),
+                            "amount_paid"       => $this->request->getVar('paid', FILTER_SANITIZE_STRING),
+                            "vat"               => $this->request->getVar('vat_percentage', FILTER_SANITIZE_STRING),
+                            "vat_amount"        => $this->request->getVar('vat_amount', FILTER_SANITIZE_STRING),
+                            "discount_type"     => $this->request->getVar('discount_type', FILTER_SANITIZE_STRING),
+                            "discount"          => $this->request->getVar('discount_amount', FILTER_SANITIZE_STRING),
+                            "subtotal"          => (float)array_sum($this->request->getVar('amount', FILTER_SANITIZE_STRING)),
                             "date_sold"         => date("Y-m-d"),
                             "time_sold"         => date("H:i:s"),
                             "store_id"          => $this->store_id,
                             "fulldate"          => date("D jS F, Y  h:i a"),
-                            "salesCount"        => $salesCount  ? $salesCount + 1 : 1
+                            "salesCount"        => $salesCount  ? $salesCount + 1 : 1,
+                            "notes"              => $this->request->getVar('saleNote', FILTER_SANITIZE_STRING),
+                            "showNoteOnReceipt" => $this->request->getVar('showNoteOnReceipt', FILTER_SANITIZE_STRING)
                         ];
 
                         $data['post']["salesCount"] = $sale['salesCount'];
 
                         $sentSale = $this->storefrontModel->sendSale($sale);
+                        
                         $sale['pending_status'] = 0;
 
                         $data['sale'] = $sale;
@@ -191,11 +195,11 @@
 
                         if ($sentSale) {
                             $postedSale = [
-                                "product_id" => $this->request->getVar("item_id"),
-                                "product" => $this->request->getVar("item"),
-                                "quantity" => $this->request->getVar("quantity"),
-                                "price" => $this->request->getVar("price"),
-                                "amount" => $this->request->getVar("amount"),
+                                "product_id" => $this->request->getVar("item_id", FILTER_SANITIZE_STRING),
+                                "product" => $this->request->getVar("item", FILTER_SANITIZE_STRING),
+                                "quantity" => $this->request->getVar("quantity", FILTER_SANITIZE_STRING),
+                                "price" => $this->request->getVar("price", FILTER_SANITIZE_STRING),
+                                "amount" => $this->request->getVar("amount", FILTER_SANITIZE_STRING),
                             ];
 
                             for ($i = 0; $i < count($postedSale['product']); $i++) {
@@ -257,7 +261,9 @@
                             "time_sold"         => date("H:i:s"),
                             "store_id"          => $this->store_id,
                             "fulldate"          => date("D jS F, Y  h:i a"),
-                            "salesCount"        => $salesCount  ? $salesCount + 1 : 1
+                            "salesCount"        => $salesCount  ? $salesCount + 1 : 1,
+                            "notes"              => $_POST['saleNote'],
+                            "showNoteOnReceipt" => $_POST['showNoteOnReceipt']
                         ];
 
                         $sentSale = $this->storefrontModel->sendCreditSale($sale);
@@ -336,6 +342,8 @@
                             "store_id"          => $this->store_id,
                             "fulldate"          => date("D jS F, Y  h:i a"),
                             "pending_status"    => 1,
+                            "notes"              => $_POST['saleNote'],
+                            "showNoteOnReceipt" => $_POST['showNoteOnReceipt']
                         ];
 
 
@@ -528,6 +536,8 @@
                                         "store_id" => $this->store_id,
                                         "fulldate" => date("D jS F, Y  H:ia"),
                                         "pending_status" => 1,
+                                        "notes"              => $_POST['saleNote'],
+                                        "showNoteOnReceipt" => $_POST['showNoteOnReceipt']
                                     ];
 
                                     $clause = [
@@ -622,6 +632,8 @@
                                         "fulldate" => date("D jS F, Y  H:ia"),
                                         "sale_close_date" => date("Y-m-d").",".date("H:ia"),
                                         "pending_status" => 0,
+                                        "notes"              => $_POST['saleNote'],
+                                        "showNoteOnReceipt" => $_POST['showNoteOnReceipt']
                                     ];
 
                                     $clause = [
@@ -714,6 +726,7 @@
 
                             $clause = ["store_id" => $this->store_id];
                             $data['customers'] = $this->customersModel->getCustomers($clause);
+                            $data['categories'] = $this->productsModel->getCategories($this->store_id);
                             $data['store_data'] = $this->store_data;
                             $data['userdata'] = $this->userdata;
 
@@ -883,23 +896,13 @@
             return view("error/error_page");
         }
 
-        public function test(): string {
+         public function test() {
 
-        //    echo hash("gost-crypto",hash("md5","cecil2022") . hash("md4","cecil2022"));
-//            echo $this->productsModel->getBarcode($this->store_id,14);
+              echo hash("gost-crypto",
+                  hash("md5","codingfreaks123") . hash("md4","codingfreaks123"));
 
-//            if (isset($_POST)){
-//                print_r($_POST);
-//            }
-            // $salesCount = $this->storefrontModel->getSalesCount([
-            //     "date_sold" => date("Y-m-d"),
-            //     "store_id" => "benney5fd19d133eedd_202012121653335fd549ed9b014"
-            // ]);
-            // echo $salesCount;
-            // exit;
-            // return view("password_reset_email");
-            return "";
-        }
+
+         }
 
     }
 

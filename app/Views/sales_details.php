@@ -231,8 +231,14 @@
                                     </table>
                                 </div>
                             </div>
-
                         </div>
+                        <div class="row">
+                                <div class="col-md-12 mb-2">
+                                    <h3>Note</h3> <hr>
+                                    <?=!empty($sale->notes)? $sale->notes : "No note was added to this sale" ?>
+                                    <hr>
+                                </div>
+                            </div>
                         <div class="row no-print">
                             <div class="col-12">
                                 <?php if ($sale->pending_status == 1):?>

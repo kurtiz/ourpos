@@ -14,8 +14,8 @@
 
     <link rel="icon" href="<?= base_url(); ?>/public/favicon.ico" type="image/x-icon"/>
 
-    <link rel="manifest" href="<?=base_url(); ?>/public/manifest.json">
-    <link rel="apple-touch-icon"href="<?php base_url(); ?>public/favicon.ico" type="image/x-icon" />
+    <link rel="manifest" href="<?= base_url(); ?>/public/manifest.json">
+    <link rel="apple-touch-icon" href="<?php base_url(); ?>public/favicon.ico" type="image/x-icon"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#404E67"/>
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -64,7 +64,8 @@
                     <div class="row align-items-end">
                         <div class="col-lg-8">
                             <div class="page-header-title">
-                                <i class="ik ik-inbox credit bg-blue" id="cart_toggle" onclick="toggle_sale_mode()" style="cursor: pointer"></i>
+                                <i class="ik ik-inbox credit bg-blue" id="cart_toggle" onclick="toggle_sale_mode()"
+                                   style="cursor: pointer"></i>
                                 <div class="d-inline">
                                     <h5>Store Front</h5>
                                     <span>Make sale from this panel</span>
@@ -101,7 +102,7 @@
                                 <div class="col-md-6 text-right">
                                     <label for="js-success">Vat</label>
                                     <input type="checkbox" id="js-success" class="js-success" <?=
-                                    ($store_data->vat_status=="on")? "checked":"" ?>/>
+                                    ($store_data->vat_status == "on") ? "checked" : "" ?>/>
                                 </div>
 
                             </div>
@@ -142,62 +143,92 @@
                                     </div>
                                     <div class="row">
                                         <div>
-                                            <input type="text" id="totalAmount" readonly="readonly" name="total_amount" hidden/>
+                                            <input type="text" id="totalAmount" readonly="readonly" name="total_amount"
+                                                   hidden/>
                                             <input type="text" hidden name="cus_id" readonly="readonly" id="cus_id"/>
-                                            <input type="text" hidden name="cus_name" readonly="readonly" id="cus_name"/>
-                                            <input type="text" hidden name="vat_percentage" readonly="readonly" value="<?=$store_data->vat?>" id="vat_percentage"/>
-                                            <input type="text" hidden name="vat_amount" readonly="readonly" id="vat_amount"/>
-                                            <input type="text" hidden name="discount_type" readonly="readonly" id="discount_type"/>
-                                            <input type="text" hidden name="discount_amount" readonly="readonly" id="discount_amount"/>
+                                            <input type="text" hidden name="cus_name" readonly="readonly"
+                                                   id="cus_name"/>
+                                            <input type="text" hidden name="vat_percentage" readonly="readonly"
+                                                   value="<?= $store_data->vat ?>" id="vat_percentage"/>
+                                            <input type="text" hidden name="vat_amount" readonly="readonly"
+                                                   id="vat_amount"/>
+                                            <input type="text" hidden name="discount_type" readonly="readonly"
+                                                   id="discount_type"/>
+                                            <input type="text" hidden name="discount_amount" readonly="readonly"
+                                                   id="discount_amount"/>
                                             <input type="text" hidden name="promo" readonly="readonly" id="promo"/>
-                                            <input type="text" hidden name="sale_type" readonly="readonly" value="direct" id="sale_type"/>
+                                            <input type="text" hidden name="sale_type" readonly="readonly"
+                                                   value="direct" id="sale_type"/>
+                                            <textarea hidden readonly="readonly" id="saleNote"
+                                                      name="saleNote"></textarea>
+                                            <input hidden type="text" readonly="readonly" id="txtShowNoteOnReceipt"
+                                                   name="showNoteOnReceipt">
                                         </div>
                                         <table class="col-md-12">
                                             <tr id="disappear">
                                                 <td width="10%">Paid <small>₵</small</td>
                                                 <td width="">
                                                     <input class="form-control col-md-9"
-                                                           onchange="overallSuM('subtotals')" name="paid" value="0" min="0"
-                                                                    id="paid" type="number">
+                                                           onchange="overallSuM('subtotals')" name="paid" value="0"
+                                                           min="0"
+                                                           id="paid" type="number">
                                                 </td>
                                                 <td width="15%">
                                                     Change <small>₵</small</td>
                                                 <td width="">
-                                                    <input class="form-control col-md-9" name="change" id="chang" value="0"
-                                                                    min="0" readonly="readonly" type="number">
+                                                    <input class="form-control col-md-9" name="change" id="chang"
+                                                           value="0"
+                                                           min="0" readonly="readonly" type="number">
                                                 </td>
                                                 <td width="">
                                                     <input class="form-control col-md-9" id="chang2" value="0"
-                                                                    min="0" hidden readonly="readonly" type="number">
+                                                           min="0" hidden readonly="readonly" type="number">
                                                 </td>
                                             </tr>
                                         </table>
                                     </div>
                                     <br>
-                                    <?php if ($store_data->discount=="on"):?>
-                                    <div class="col-md-12">
-                                        <p>
-                                            <button type="button" id="discountBtn" class="btn btn-success col-md-12" data-toggle="modal" data-target="#discountModal">
-                                                Discount
-                                            </button>
-                                        </p>
-                                    </div>
-                                    <?php endif;?>
-                                    <div class="col-md-12">
-                                        <p>
-                                            <button type="button" id="savem" class="btn btn-warning col-md-12">
+
+                                    <?php if ($store_data->discount == "on"): ?>
+                                        <div class="col-md-12">
+                                            <p>
+                                                <button type="button" id="discountBtn" class="btn btn-success col-md-12"
+                                                        data-toggle="modal" data-target="#discountModal">
+                                                    Discount
+                                                </button>
+                                            </p>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if ($store_data->noteDisplay == "on"): ?>
+                                        <div class="col-md-12">
+                                            <p>
+                                                <button type="button" id="noteBtn" class="btn btn-purple col-md-12"
+                                                        data-toggle="modal" data-target="#noteModal">
+                                                    Add Note
+                                                </button>
+                                            </p>
+                                        </div>
+                                    <?php endif; ?>
+<!--                                    <div class="text-center">-->
+<!--                                        <button type="button" id="savem" class="text-left btn btn-warning px-5">-->
+<!--                                            Save-->
+<!--                                        </button>-->
+<!--                                        <button type="button" id="subm" class="text-right btn btn-primary px-5">-->
+<!--                                            Submit-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+
+                                    
+                                    <div class="row">
+                                        <div class="col-md-12 text-center">
+                                            <button type="button" id="savem" class="col-md-5 btn btn-warning m-1">
                                                 Save
                                             </button>
-                                        </p>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <p>
-                                            <button type="button" id="subm" class="btn btn-primary col-md-12">
+                                            <button type="button" id="subm" class="col-md-5 btn btn-primary m-1">
                                                 Submit
                                             </button>
-                                        </p>
+                                        </div>
                                     </div>
-
                                 </form>
                             </div>
 
@@ -207,9 +238,12 @@
                     <div class="col-md-6">
                         <div class="card ">
                             <div class="card-body">
-                                <div class="form-group">
-                                    <input type="text" name="" id="barcode_no" placeholder="Scan barcode here" class="form-control">
-                                </div>
+                                <?php if($store_data->barcode == "on"): ?>
+                                    <div class="form-group">
+                                        <input type="text" name="" id="barcode_no" placeholder="Scan barcode here"
+                                               class="form-control">
+                                    </div>
+                                <?php endif;?>
                                 <form class="forms-sample">
 
                                     <div class="row">
@@ -221,7 +255,7 @@
                                              */
                                             if (is_array($customers)): ?>
                                                 <select id="customer_select" class="form-control select2">
-                                                    <option value="">select customer</option>
+                                                    <option value="">Select Customer</option>
                                                     <?php foreach ($customers as $row): ?>
                                                         <option value="<?= $row['customer_id'] ?>,<?= $row['customer_name'] ?>">
                                                             <span><?= $row['customer_name'] ?></span> :
@@ -237,7 +271,33 @@
                                         </div>
                                         <!-- End Customers List-->
 
+                                        <!-- Category list -->
+                                        <div class="form-group col-md-12">
+                                            <?php
+                                            /**
+                                             * @var array $categories
+                                             */
+                                            if (is_array($categories)): ?>
+                                                <select id="categories_select" name="category" class="form-control select2">
+                                                    <option value="*">All Categories</option>
+                                                    <option value="">Uncategorized</option>
+                                                    <?php foreach ($categories as $row): ?>
+<!--                                                        --><?php //if ((float)$row['quantity'] > 0 && $row['status'] == "active"): ?>
+                                                            <option value="<?= $row['cat_id'] ?>">
+                                                                <?= $row['cat_name'] ?>
+                                                            </option>
+<!--                                                        --><?php //endif; ?>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            <?php else: ?>
+                                                <select id="categories_select" name="category" class="form-control select2">
+                                                    <option value="">No Categories In Inventory</option>
+                                                </select>
+                                            <?php endif; ?>
+                                        </div>
+                                        <!-- End Category list -->
 
+                                        <!-- Product list -->
                                         <div class="form-group col-md-12">
                                             <?php
                                             /**
@@ -245,7 +305,7 @@
                                              */
                                             if (is_array($products)): ?>
                                                 <select id="product_select" class="form-control select2">
-                                                    <option value="">select products</option>
+                                                    <option value="">Select Products</option>
                                                     <?php foreach ($products as $row): ?>
                                                         <?php if ((float)$row['quantity'] > 0 && $row['status'] == "active"): ?>
                                                             <option value="<?= $row['product_id'] ?>,
@@ -258,11 +318,12 @@
                                                     <?php endforeach; ?>
                                                 </select>
                                             <?php else: ?>
-                                                <select id="category" name="category" class="form-control select2">
+                                                <select id="product_select" name="product_select" class="form-control select2">
                                                     <option value="">No Products In Inventory</option>
                                                 </select>
                                             <?php endif; ?>
                                         </div>
+                                        <!-- End Product list -->
                                     </div>
                                 </form>
                                 <div class="row" style="max-height: 484px; overflow-y: scroll; ">
@@ -270,48 +331,55 @@
                                         <?php foreach ($products as $row): ?>
                                             <?php if ((float)$row['quantity'] > 0 && $row['status'] == "active"): ?>
 
-                                            <div class="col-md-4 it-card">
-                                                <?php if (!empty($row['image'])): ?>
+                                                <div class="col-md-4 category-<?=$row["cat_id"]?> it-card">
+                                                    <?php if (!empty($row['image'])): ?>
 
-                                                    <a class="card-img">
-                                                        <img id="img<?= $row['barcode'] ?>" src="<?= $row['image'] ?>" alt=""
-                                                             style="height: 119px; width: 119px" class="img-thumbnail" data-toggle="tooltip" data-placement="top"
-                                                             title="<?=$row['quantity']?> left">
-                                                    </a>
-                                                <?php else: ?>
-                                                    <a class="card-img">
-                                                        <img id="img<?= $row['barcode'] ?>" src="<?=base_url()?>/public/img/uploads/products/product-default-image.png" alt=""
-                                                             style="height: 119px; width: 119px" class="img-thumbnail" data-toggle="tooltip" data-placement="top"
-                                                             title="<?=$row['quantity']?> left">
-                                                    </a>
-                                                <?php endif; ?>
+                                                        <a class="card-img">
+                                                            <img id="img<?= $row['barcode'] ?>"
+                                                                 src="<?= $row['image'] ?>" alt=""
+                                                                 style="height: 119px; width: 119px"
+                                                                 class="img-thumbnail" data-toggle="tooltip"
+                                                                 data-placement="top"
+                                                                 title="<?= $row['quantity'] ?> left">
+                                                        </a>
+                                                    <?php else: ?>
+                                                        <a class="card-img">
+                                                            <img id="img<?= $row['barcode'] ?>"
+                                                                 src="<?= base_url() ?>/public/img/uploads/products/product-default-image.png"
+                                                                 alt=""
+                                                                 style="height: 119px; width: 119px"
+                                                                 class="img-thumbnail" data-toggle="tooltip"
+                                                                 data-placement="top"
+                                                                 title="<?= $row['quantity'] ?> left">
+                                                        </a>
+                                                    <?php endif; ?>
 
-                                                <p id="<?= $row['barcode'] ?>" class="text-center">
-                                                    <span></span><span><?= $row['product_name'] ?></span><br>
-                                                    <span>GH¢</span> <span><?= $row['selling_price'] ?></span><br>
-                                                    <a href="#" id="btn<?= $row['barcode'] ?>" hidden
-                                                       class="info add_product btn btn-info"><i
-                                                                class="ik ik-shopping-cart"></i></a>
-                                                    <span id="stk<?= $row['barcode'] ?>"
-                                                          hidden><?= $row['quantity'] ?></span>
-                                                    <span id="categoryInfo<?=$row['barcode']?>" hidden>
-                                                        <?php if (empty($row['cat_name'])):?>
+                                                    <p id="<?= $row['barcode'] ?>" class="text-center">
+                                                        <span></span><span><?= $row['product_name'] ?></span><br>
+                                                        <span>GH¢</span> <span><?= $row['selling_price'] ?></span><br>
+                                                        <a href="#" id="btn<?= $row['barcode'] ?>" hidden
+                                                           class="info add_product btn btn-info"><i
+                                                                    class="ik ik-shopping-cart"></i></a>
+                                                        <span id="stk<?= $row['barcode'] ?>"
+                                                              hidden><?= $row['quantity'] ?></span>
+                                                        <span id="categoryInfo<?= $row['barcode'] ?>" hidden>
+                                                        <?php if (empty($row['cat_name'])): ?>
                                                             null,No Category
-                                                        <?php else:?>
-                                                            <?=$row['cat_id']?>,<?=$row['cat_name'] ?>
-                                                        <?php endif;?>
+                                                        <?php else: ?>
+                                                            <?= $row['cat_id'] ?>,<?= $row['cat_name'] ?>
+                                                        <?php endif; ?>
                                                     </span>
-                                                    <span hidden id="item_id<?=$row['barcode']?>">
-                                                        <?=$row['product_id']?>
+                                                        <span hidden id="item_id<?= $row['barcode'] ?>">
+                                                        <?= $row['product_id'] ?>
                                                     </span>
-                                                </p>
-                                            </div>
+                                                    </p>
+                                                </div>
                                             <?php endif; ?>
                                         <?php endforeach; ?>
                                     <?php else: ?>
                                         <div class="col-md-12 text-center">
                                             <p>
-                                                <h3>No Products In Inventory</h3>
+                                            <h3>No Products In Inventory</h3>
                                             </p>
                                         </div>
                                     <?php endif; ?>
@@ -328,19 +396,22 @@
         <?= $this->include("widgets/footer"); ?>
     </div>
 </div>
-<div class="modal fade" id="discountModal" tabindex="-1" role="dialog" aria-labelledby="discountModalLabel" style="display: none;" aria-hidden="true">
+<div class="modal fade" id="discountModal" tabindex="-1" role="dialog" aria-labelledby="discountModalLabel"
+     style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalCenterLabel">Discount</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
             </div>
-             <div class="modal-body">
+            <div class="modal-body">
 
                 <div id="discountForm">
 
                     <div class="form-group">
-                        <input type="text" id="discount_text" name="discount" class="form-control" placeholder="amount (30.00) / percentage (%) / promo code (DVTY67)">
+                        <input type="text" id="discount_text" name="discount" class="form-control"
+                               placeholder="amount (30.00) / percentage (%) / promo code (DVTY67)">
                     </div>
 
                     <div class="radio radio-inline">
@@ -379,6 +450,40 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="noteModal" tabindex="-1" role="dialog" aria-labelledby="discountModalLabel"
+     style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterLabel">Sale Note</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+
+                <div id="noteForm">
+
+                    <div class="form-group">
+                        <textarea type="text" id="note_text" name="discount" class="form-control"
+                                  placeholder="A simple short note or description for the sale"></textarea>
+                    </div>
+
+                    <div class="radio radio-inline">
+                        <label>
+                            <input type="checkbox" id="showNoteOnReceipt">
+                            Display on Receipt
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" id="saveNoteBtn">Apply</button>
+            </div>
+        </div>
+    </div>
+</div>
 <?= $this->include("widgets/user_menu"); ?>
 <style>
 </style>
@@ -397,11 +502,11 @@
 <script src="<?= base_url(); ?>/public/plugins/sweetalerts2/dist/sweetalert2.js"></script>
 <script>
 
-    $("#item-form").on("submit", function(){
+    $("#item-form").on("submit", function () {
         loading_overlay(1)
     })
     <?php
-        if (!empty(session()->getTempdata('name'))):
+    if (!empty(session()->getTempdata('name'))):
     ?>
     $.toast({
         text: 'Welcome <?=session()->getTempdata('name')?>',
@@ -412,11 +517,11 @@
         textColor: 'white'
     })
     <?php
-        endif;
+    endif;
     ?>
 
     <?php
-        if (!empty(session()->getTempdata('success'))):
+    if (!empty(session()->getTempdata('success'))):
     ?>
     $.toast({
         text: '<?=session()->getTempdata('success')?>',
@@ -427,7 +532,7 @@
         textColor: 'white'
     })
     <?php
-        elseif(!empty(session()->getTempdata('error'))):
+    elseif(!empty(session()->getTempdata('error'))):
     ?>
     $.toast({
         text: '<?=session()->getTempdata('error')?>',
@@ -438,7 +543,7 @@
         textColor: 'white'
     })
     <?php
-        endif;
+    endif;
     ?>
 </script>
 </body>

@@ -13,11 +13,7 @@
 
      <body onload="print();" onafterprint="
     <?php
-        if(session()->getTempdata("uri_referer") != null || session()->getTempdata("uri_referer") != ""){
-            echo "window.location.assign('". session()->getTempdata("uri_referer") . "')";
-        }else {
-            echo "window.history.back()";
-        }
+        echo "window.location.assign('". base_url() . "/store')";
     ?>
     ">
 
@@ -48,7 +44,7 @@
 
         p {
             font-size: .6em;
-            color: #666;
+            color: black;
             line-height: 1.2em;
         }
         .contact p {
@@ -123,6 +119,7 @@
 
         .itemtext {
             font-size: 11px;
+            color: black !important;
         }
 
         #legalcopy {
@@ -176,10 +173,12 @@
             </h2>
             <?= $receipt->fulldate ?>
             <div class="contact">
-            <p>
+            <h2>
+                <p>
                 <?= $store_data->address ?><br>
                 <a><?= $store_data->mobile ?></a>, <a><?= $store_data->fax ?></a>.
             </p>
+            </h2>
             </div>
         </div>
     </div>
@@ -206,7 +205,7 @@
                     <b>
                         <tr class="service">
                             <td class="tableitem">
-                                <b><p class="itemtext"><?= $receiptDetails[$i]["product"]; ?></p></b>
+                               <b><p class="itemtext"><?= $receiptDetails[$i]["product"]; ?></p></b>
                             </td>
                             <td class="tableitem">
                                 <b><p class="itemtext amt"><?= $receiptDetails[$i]["quantity"]; ?></p></b>
@@ -220,6 +219,17 @@
                         </tr>
                     </b>
                 <?php endfor; ?>
+                <?php if($receipt->showNoteOnReceipt == "on"): ?>
+                <br>
+                <tr>
+                    <td colspan="3">
+                        <h2>
+                            <?=!empty($sale->notes)? $sale->notes : "No note was added to this sale" ?>
+                        </h2>
+                    </td>
+                </tr>
+                <br>
+                <?php endif; ?>
                 <tr class="tabletitle">
                     <td></td>
                     <td class="Rate">
@@ -285,6 +295,7 @@
         <!--End Table-->
 
         <div id="legalcopy" class="contact">
+           
             <p class="legal" style="text-align:center">
                 ~ Powered By <strong>Our Technologies Consortium</strong> ~ <br>
             </p>
@@ -292,6 +303,7 @@
                 024 349 5149 | 055 327 6163
                 <br>ourproductandservices1@gmail.com
             </p>
+           
 
         </div>
 
