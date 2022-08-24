@@ -223,6 +223,19 @@
                                                     <input type="checkbox" id="logoDisplay" class="js-success" name="storeLogoDisplay"
                                                         <?= $storedata->logoDisplay == "on" ? "checked" : "" ?>/>
 
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-md-3">
+                                                <div data-toggle="tooltip" data-placement="top"
+                                                     title="Toggle to enable Notes when selling in storefront"
+                                                     class="form-group">
+                                                    <label for="js-success">Notes In Store Front</label>
+                                                    <input type="checkbox" id="noteDisplay" class="js-success" name="storeNoteDisplay"
+                                                        <?= $storedata->noteDisplay == "on" ? "checked" : "" ?>/>
+
+                                                </div>
+                                            </div>
                                         </div>
                                     </form>
 
@@ -262,7 +275,7 @@
         //instantiating plugins {switchery: for the switch button}
         $(document).ready(function () {
             //*** switchery instantiating ***//
-            let x = Array("#vat", "#discount", "#bc_search", "#salesCount", "#logoDisplay");
+            let x = Array("#vat", "#discount", "#bc_search", "#salesCount", "#logoDisplay" ,"#noteDisplay");
             for (let i = 0; i < x.length; i++) {
                 var elemprimary = document.querySelector(x[i]);
                 var switchery = new Switchery(elemprimary, {

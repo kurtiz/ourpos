@@ -31,7 +31,7 @@ class Home extends BaseController {
                 if ($userdata) {
 
                     if (
-                        hash("md5",
+                        hash("gost-crypto",
                         hash("md5",$password) . hash("md4",$password)) == $userdata['passkey']
                     ) {
 
