@@ -205,6 +205,25 @@
                                                 </span>
                                             </td>
                                         </tr>
+                                        <?php if ($sale["otherTaxes"] == "on"): ?>
+                                            <?php
+                                            $otherTaxes = json_decode($sale["taxes"], true);
+                                            $keys = array_keys($otherTaxes);
+                                            for($i = 0; $i < count($keys); $i++):
+                                                ?>
+                                                <tr>
+                                                    <th><?=$keys[$i]?> (<?=$otherTaxes[$keys[$i]]['value']?>%):</th>
+                                                    <td>
+                                                        GHc.
+                                                        <span id="vat_amount">
+                                                    <?=$otherTaxes[$keys[$i]]['amount']?>
+                                                </span>
+                                                    </td>
+                                                </tr>
+                                            <?php
+                                            endfor;
+                                        endif; ?>
+
                                         <tr>
                                             <th>Total:</th>
                                             <td>

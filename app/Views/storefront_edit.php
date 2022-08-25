@@ -233,6 +233,8 @@
                                                    name="showNoteOnReceipt">
                                             <input hidden type="text" readonly="readonly" id="txtTaxes"
                                                    name="taxes">
+                                            <input hidden type="text" readonly="readonly" id="txtOtherTaxes"
+                                                   name="otherTaxes" value="<?=$store_data->otherTaxes?>">
                                         </div>
                                         <table class="col-md-12">
                                             <tr id="disappear">

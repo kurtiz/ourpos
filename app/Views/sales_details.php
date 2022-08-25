@@ -36,6 +36,8 @@
 </head>
 
 <body>
+<?//=var_dump(json_decode($sale->taxes, true));
+//exit;?>
 <div id="overlay">
     <div class='lds-ripple'>
         <div></div>
@@ -189,6 +191,24 @@
                                             </td>
                                             <?php endif; ?>
                                         </tr>
+                                        <?php if ($sale->otherTaxes == "on"): ?>
+                                        <?php
+                                            $otherTaxes = json_decode($sale->taxes, true);
+                                            $keys = array_keys($otherTaxes);
+                                            for($i = 0; $i < count($keys); $i++):
+                                        ?>
+                                        <tr>
+                                            <th><?=$keys[$i]?> (<?=$otherTaxes[$keys[$i]]['value']?>%):</th>
+                                            <td>
+                                                GHc.
+                                                <span id="vat_amount">
+                                                    <?=$otherTaxes[$keys[$i]]['amount']?>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <?php
+                                        endfor;
+                                        endif; ?>
                                         <tr>
                                             <th>Total:</th>
                                             <td>
@@ -198,6 +218,7 @@
                                     </table>
                                 </div>
                             </div>
+
                             <div class="col-6">
                                 <br><br><br>
                                 <div class="table-responsive">

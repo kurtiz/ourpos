@@ -150,6 +150,12 @@
              * @return RedirectResponse|string
              */
             if ($this->request->getMethod() == "post"){
+
+//                echo "<pre>";
+//                var_dump($_POST);
+//                echo "</pre>";
+//                exit;
+
                 $data['post'] = $_POST;
                 session()->setTempdata( "uri_referer",base_url()."/store", "10000000");
 
@@ -180,8 +186,10 @@
                             "store_id"          => $this->store_id,
                             "fulldate"          => date("D jS F, Y  h:i a"),
                             "salesCount"        => $salesCount  ? $salesCount + 1 : 1,
-                            "notes"              => $this->request->getVar('saleNote', FILTER_SANITIZE_STRING),
-                            "showNoteOnReceipt" => $this->request->getVar('showNoteOnReceipt', FILTER_SANITIZE_STRING)
+                            "notes"             => $this->request->getVar('saleNote', FILTER_SANITIZE_STRING),
+                            "showNoteOnReceipt" => $this->request->getVar('showNoteOnReceipt', FILTER_SANITIZE_STRING),
+                            "taxes"             => $this->request->getVar("taxes"),
+                            "otherTaxes"        => $this->request->getVar('otherTaxes',FILTER_SANITIZE_STRING),
                         ];
 
                         $data['post']["salesCount"] = $sale['salesCount'];
@@ -263,7 +271,9 @@
                             "fulldate"          => date("D jS F, Y  h:i a"),
                             "salesCount"        => $salesCount  ? $salesCount + 1 : 1,
                             "notes"              => $_POST['saleNote'],
-                            "showNoteOnReceipt" => $_POST['showNoteOnReceipt']
+                            "showNoteOnReceipt" => $_POST['showNoteOnReceipt'],
+                            "taxes"             => $this->request->getVar("taxes"),
+                            "otherTaxes"        => $this->request->getVar('otherTaxes',FILTER_SANITIZE_STRING),
                         ];
 
                         $sentSale = $this->storefrontModel->sendCreditSale($sale);
@@ -343,7 +353,9 @@
                             "fulldate"          => date("D jS F, Y  h:i a"),
                             "pending_status"    => 1,
                             "notes"              => $_POST['saleNote'],
-                            "showNoteOnReceipt" => $_POST['showNoteOnReceipt']
+                            "showNoteOnReceipt" => $_POST['showNoteOnReceipt'],
+                            "taxes"             => $this->request->getVar("taxes"),
+                            "otherTaxes"        => $this->request->getVar('otherTaxes',FILTER_SANITIZE_STRING),
                         ];
 
 
@@ -537,7 +549,9 @@
                                         "fulldate" => date("D jS F, Y  H:ia"),
                                         "pending_status" => 1,
                                         "notes"              => $_POST['saleNote'],
-                                        "showNoteOnReceipt" => $_POST['showNoteOnReceipt']
+                                        "showNoteOnReceipt" => $_POST['showNoteOnReceipt'],
+                                        "taxes"             => $this->request->getVar("taxes"),
+                                        "otherTaxes"        => $this->request->getVar('otherTaxes',FILTER_SANITIZE_STRING),
                                     ];
 
                                     $clause = [
@@ -633,7 +647,9 @@
                                         "sale_close_date" => date("Y-m-d").",".date("H:ia"),
                                         "pending_status" => 0,
                                         "notes"              => $_POST['saleNote'],
-                                        "showNoteOnReceipt" => $_POST['showNoteOnReceipt']
+                                        "showNoteOnReceipt" => $_POST['showNoteOnReceipt'],
+                                        "taxes"             => $this->request->getVar('taxes'),
+                                        "otherTaxes"        => $this->request->getVar('otherTaxes',FILTER_SANITIZE_STRING),
                                     ];
 
                                     $clause = [

@@ -248,6 +248,7 @@
 <!--                        <h2>--><?php ////echo $_COOKIE['waiters'];?><!--</h2></h2>-->
 <!--                    </td>-->
 <!--                </tr>-->
+                <?php if(!empty($store_data->vat_status == "on")):?>
                 <tr class="tabletitle">
                     <td></td>
                     <td class="Rate">
@@ -257,6 +258,31 @@
                         <h2>GHc. <?=$receipt->vat_amount?></h2>
                     </td>
                 </tr>
+                <?php endif; ?>
+
+                <?php if ($receipt->otherTaxes == "on"): ?>
+                    <?php
+                    $otherTaxes = json_decode($receipt->taxes, true);
+                    $keys = array_keys($otherTaxes);
+                    for($i = 0; $i < count($keys); $i++):
+                        ?>
+                        <tr class="tabletitle">
+                            <td></td>
+                            <td class="Rate">
+                                <h2>
+                                    <?=$keys[$i]?> (<?=$otherTaxes[$keys[$i]]['value']?>%):
+                                </h2>
+                            </td>
+                            <td class="payment">
+                                GHc.
+                                <h2>
+                                    <?=$otherTaxes[$keys[$i]]['amount']?>
+                                </h2>
+                            </td>
+                        </tr>
+                    <?php
+                    endfor;
+                endif; ?>
 
                 <?php if(!empty($receipt->discount_type)):?>
                 <tr class="tabletitle">
