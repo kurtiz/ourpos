@@ -150,7 +150,7 @@ $(document).on('click', '.add_product', function () {
 
 
 //*** Event When Amount Paid is Entered ***//
-$('#paid').on('keypress', function () {
+$('#paid').on('change', function () {
     // calChange();
     //grabs event keycode in the keycode constant
     const {keyCode} = event;
@@ -266,6 +266,7 @@ $("#clearCartBtn").on("click", function () {
 
 //*** Submit Button click ***//
 $('#subm').click(function () {
+    calChange()
     // checks if total is 0.00
     if ($("#disappear").prop("style")[0] === undefined) {
         if (parseFloat($('#tableTotal').text()).toFixed(2) * 1 === 0.00) {
@@ -380,7 +381,7 @@ $('#subm').click(function () {
 
 //*** Credit Submit Button click ***//
 $('#subc').on('click', function () {
-    console.log("whats wrong")
+    calChange()
     // checks if total is 0.00
     if (parseFloat($('#tableTotal').text()).toFixed(2) * 1 === 0.00) {
         // show an Cart error since there is nothing in th cart
@@ -652,6 +653,8 @@ function array_sum(array) {
  * calculates the overall total of all the products on the cart table (including the VAT)
  * @param {string} sumClass the class name of all the total prices of each product on the cart
  */
+
+
 function overallSumm(sumClass) {
     // gets the value of the class name
     let overallSum = $(`.${sumClass}`);
@@ -676,11 +679,11 @@ function overallSumm(sumClass) {
     let vat;
 
     // gets the value of the VAT switch
-    let checkr = $("#js-success").prop('checked');
+    let vatStatus = $("#js-success").prop('checked');
 
     // check for the value of the VAT switch if off changes to vat value to 0 else
     // it uses the original VAT value
-    if (checkr === false) {
+    if (vatStatus === false) {
         vat = 0;
     } else {
         vat = $('#vat_percentage').val();
@@ -691,12 +694,24 @@ function overallSumm(sumClass) {
 
     $('#vat_amount').val(val);
 
-    console.log("ans: " + ans)
-    console.log("vat divided by 100 times ans: " + val)
+    let taxesAmount = 0
 
-    // adds the VAT value of the total amount to the total amount
-    let toPay = (val) + (ans);
+    if(otherTaxesState) {
+        let taxes = calculateTaxes(ans)
 
+        $("#txtTaxes").val(JSON.stringify(taxes))
+
+        taxesAmount = []
+
+        for (const tax in taxes) {
+            taxesAmount.push(taxes[tax].amount)
+        }
+
+        taxesAmount = array_sum(taxesAmount)
+    }
+
+    let toPay;
+    toPay = (val) + (ans) + (taxesAmount);
     // assigns the value to the cart table's total UI
     vTotal.html(
         parseFloat(toPay).toFixed(2).toString()
@@ -704,11 +719,68 @@ function overallSumm(sumClass) {
                 /\B(?=(\d{3})+(?!\d))/g, ","
             ) // this includes comma before every three place values
     );
-
-    console.log(toPay)
     return toPay;
 
 }
+
+//
+// function overallSumm(sumClass) {
+//     // gets the value of the class name
+//     let overallSum = $(`.${sumClass}`);
+//     // an array to store all the totals of product prices
+//     var sum_arr;
+//     sum_arr = [];
+//
+//     // loop to push the totals to the array. the idea is to able to sum the content of the array
+//     // to get the overall total
+//     for (var i = 0; i < overallSum.length; i++) {
+//         sum_arr.push(overallSum.eq(i).val());
+//     }
+//
+//     // summing the the content if the array.
+//     // let ans = parseFloat(sum_arr.reduce((a, b) => a + b, 0)).toFixed(2);
+//
+//     let ans = array_sum(sum_arr);
+//
+//     // id of the cart table's total UI
+//     let vTotal = $('#tableTotal');
+//     // keeps the value of the VAT
+//     let vat;
+//
+//     // gets the value of the VAT switch
+//     let vatStatus = $("#js-success").prop('checked');
+//
+//     // check for the value of the VAT switch if off changes to vat value to 0 else
+//     // it uses the original VAT value
+//     if (vatStatus === false) {
+//         vat = 0;
+//     } else {
+//         vat = $('#vat_percentage').val();
+//     }
+//
+//     // calculates the value of VAT on the total amount
+//     val = (vat / 100) * ans;
+//
+//     $('#vat_amount').val(val);
+//
+//     console.log("ans: " + ans)
+//     console.log("vat divided by 100 times ans: " + val)
+//
+//     // adds the VAT value of the total amount to the total amount
+//     let toPay = (val) + (ans);
+//
+//     // assigns the value to the cart table's total UI
+//     vTotal.html(
+//         parseFloat(toPay).toFixed(2).toString()
+//             .replace(
+//                 /\B(?=(\d{3})+(?!\d))/g, ","
+//             ) // this includes comma before every three place values
+//     );
+//
+//     console.log(toPay)
+//     return toPay;
+//
+// }
 
 
 /**
@@ -716,6 +788,63 @@ function overallSumm(sumClass) {
  * but also checks the amount paid as well
  * @param {string} sumClass the class name of all the total prices of each product on the cart
  */
+// function overallSuM(sumClass) {
+//     let sums = $(`.${sumClass}`);
+//     let {length} = sums;
+//     let sum_arr;
+//     sum_arr = [];
+//     for (let i = 0; i < length; i++) {
+//         sum_arr.push(parseFloat(sums.eq(i).val()).toFixed(2));
+//     }
+//
+//     let ans = array_sum(sum_arr)
+//
+//     let vTotal = $('#tableTotal');
+//     let vat;
+//
+//     // parseFloat(document.getElementById('vat').innerText).toFixed(2);
+//     let tots = parseFloat(vTotal.text()).toFixed(2);
+//
+//
+//     let vatStatus = $("#js-success").prop("checked");
+//
+//
+//     if (vatStatus === false) {
+//         vat = 0;
+//     } else {
+//         vat = $('#vat_percentage').val();
+//     }
+//
+//     let val = (vat / 100) * ans;
+//     $('#vat_amount').val(val);
+//
+//     let topay;
+//     topay = (val) + (ans);
+//     vTotal.html(
+//         parseFloat(topay).toFixed(2).toString()
+//             .replace(
+//                 /\B(?=(\d{3})+(?!\d))/g, ","
+//             )
+//     );
+//
+//     let paid = parseFloat($("#paid").val()).toFixed(2) * 1;
+//     let total_amount = parseFloat(topay).toFixed(2) * 1
+//     $('#chang').val(parseFloat(total_amount - paid).toFixed(2) * -1);
+//     if (paid < total_amount) {
+//         $.toast({
+//             head: "Insufficient Payment",
+//             text: "Amount Paid is Insufficient..<br>Please Check Amount Paid!",
+//             showHideTransition: 'fade',
+//             icon: 'error',
+//             position: "top-right",
+//             bgColor: '#f5365c',
+//             textColor: 'white',
+//             hideAfter: 5000,
+//         });
+//     }
+// }
+
+
 function overallSuM(sumClass) {
     let sums = $(`.${sumClass}`);
     let {length} = sums;
@@ -734,10 +863,10 @@ function overallSuM(sumClass) {
     let tots = parseFloat(vTotal.text()).toFixed(2);
 
 
-    let checkr = $("#js-success").prop("checked");
+    let vatStatus = $("#js-success").prop("checked");
 
 
-    if (checkr === false) {
+    if (vatStatus === false) {
         vat = 0;
     } else {
         vat = $('#vat_percentage').val();
@@ -746,18 +875,37 @@ function overallSuM(sumClass) {
     let val = (vat / 100) * ans;
     $('#vat_amount').val(val);
 
-    let topay;
-    topay = (val) + (ans);
+    let taxesAmount = 0
+
+    if(otherTaxesState) {
+        let taxes = calculateTaxes(ans)
+
+        $("#txtTaxes").val(JSON.stringify(taxes))
+
+        taxesAmount = []
+
+        for (const tax in taxes) {
+            taxesAmount.push(taxes[tax].amount)
+        }
+
+        taxesAmount = array_sum(taxesAmount)
+    }
+
+    let toPay
+    toPay = (val) + (ans) + (taxesAmount);
     vTotal.html(
-        parseFloat(topay).toFixed(2).toString()
+        parseFloat(toPay).toFixed(2).toString()
             .replace(
                 /\B(?=(\d{3})+(?!\d))/g, ","
             )
     );
 
     let paid = parseFloat($("#paid").val()).toFixed(2) * 1;
-    let total_amount = parseFloat(topay).toFixed(2) * 1
-    $('#chang').val(parseFloat(total_amount - paid).toFixed(2) * -1);
+    let total_amount = parseFloat(toPay).toFixed(2) * 1
+    $('#chang').val(parseFloat(
+        (total_amount - paid).toString()
+    ).toFixed(2) * -1);
+
     if (paid < total_amount) {
         $.toast({
             head: "Insufficient Payment",
@@ -770,6 +918,24 @@ function overallSuM(sumClass) {
             hideAfter: 5000,
         });
     }
+}
+
+function calculateTaxes(amount){
+    let newTaxObject = {}
+    for (let tax in taxesObject){
+        if (taxesObject[tax].status === "active") {
+            newTaxObject[tax]= {
+                value: taxesObject[tax].value,
+                amount: parseFloat(
+                    parseFloat(
+                        (
+                            (taxesObject[tax].value / 100) * amount).toString()
+                    ).toFixed(2)
+                )
+            }
+        }
+    }
+    return newTaxObject
 }
 
 

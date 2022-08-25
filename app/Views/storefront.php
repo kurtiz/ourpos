@@ -163,6 +163,8 @@
                                                       name="saleNote"></textarea>
                                             <input hidden type="text" readonly="readonly" id="txtShowNoteOnReceipt"
                                                    name="showNoteOnReceipt">
+                                            <input hidden type="text" readonly="readonly" id="txtTaxes"
+                                                   name="taxes">
                                         </div>
                                         <table class="col-md-12">
                                             <tr id="disappear">
@@ -209,16 +211,7 @@
                                             </p>
                                         </div>
                                     <?php endif; ?>
-<!--                                    <div class="text-center">-->
-<!--                                        <button type="button" id="savem" class="text-left btn btn-warning px-5">-->
-<!--                                            Save-->
-<!--                                        </button>-->
-<!--                                        <button type="button" id="subm" class="text-right btn btn-primary px-5">-->
-<!--                                            Submit-->
-<!--                                        </button>-->
-<!--                                    </div>-->
 
-                                    
                                     <div class="row">
                                         <div class="col-md-12 text-center">
                                             <button type="button" id="savem" class="col-md-5 btn btn-warning m-1">
@@ -501,6 +494,8 @@
 <script src="<?= base_url(); ?>/public/js/store-cart.js"></script>
 <script src="<?= base_url(); ?>/public/plugins/sweetalerts2/dist/sweetalert2.js"></script>
 <script>
+    taxesObject = JSON.parse('<?=$store_data->taxes?>');
+    otherTaxesState = <?php if($store_data->otherTaxes == "on"):?> true;<?php else: ?>false;<?php endif; ?>
 
     $("#item-form").on("submit", function () {
         loading_overlay(1)

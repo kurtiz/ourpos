@@ -228,7 +228,7 @@
                                                         </div>
                                                         <div class="col-md-3">
                                                             <div class="form-group">
-                                                                <input disabled type="text" data-toggle="tooltip" data-placement="top"
+                                                                <input disabled type="number" data-toggle="tooltip" data-placement="top"
                                                                        title="value of the tax in percentage(%)"
                                                                        class="form-control tax-input tax-value" placeholder="Tax value" value="<?=$taxes[$keys[$i]]['value']?>">
                                                             </div>
