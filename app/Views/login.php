@@ -82,12 +82,12 @@
             </div>
         </div>
         <script src="<?php base_url(); ?>/sw.js"></script>
-        <script src="<?php base_url(); ?>public/src/js/vendor/jquery-3.3.1.min.js"></script>
-        <script src="<?php base_url(); ?>public/plugins/popper.js/dist/umd/popper.min.js"></script>
-        <script src="<?php base_url(); ?>public/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
-        <script src="<?php base_url(); ?>public/dist/js/theme.min.js"></script>
-        <script src="<?php base_url(); ?>public/plugins/jquery-toast-plugin/dist/jquery.toast.min.js"></script>
-        <script src="<?php base_url(); ?>public/js/jquery.tabbale.js"></script>
+        <script src="<?php base_url(); ?>/public/src/js/vendor/jquery-3.3.1.min.js"></script>
+        <script src="<?php base_url(); ?>/public/plugins/popper.js/dist/umd/popper.min.js"></script>
+        <script src="<?php base_url(); ?>/public/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="<?php base_url(); ?>/public/dist/js/theme.min.js"></script>
+        <script src="<?php base_url(); ?>/public/plugins/jquery-toast-plugin/dist/jquery.toast.min.js"></script>
+        <script src="<?php base_url(); ?>/public/js/jquery.tabbale.js"></script>
         <script>
 
             let username = $("#username")
