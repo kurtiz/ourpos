@@ -460,6 +460,10 @@
                     session()->setTempdata( "uri_referer",$this->request->uri, "10");
                     $data['user_role_permissions'] = $this->rolesModel->getUserRolePermissions(["role_id" => $this->userdata->role_id]);
                     $data['sales'] = $this->storeModel->getSales($this->store_id);
+//                    echo "<pre>";
+//                    print_r($data["sales"]);
+//                    echo "</pre>";
+//                    exit;
 
 //                    var_dump(json_encode($data['user_role_permissions']));
 //                    var_dump($this->userdata);
