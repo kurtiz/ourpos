@@ -336,6 +336,16 @@
 
                                                         </div>
                                                     </div>
+
+                                                    <div class="col-md-3">
+                                                        <div data-toggle="tooltip" data-placement="top"
+                                                             title="Toggle to show the product image on store front"
+                                                             class="form-group">
+                                                            <label for="js-success">Show Product Image</label>
+                                                            <input type="checkbox" id="productImage" class="js-success" name="storeProductImage"
+                                                                <?= $storedata->productImage == "on" ? "checked" : "" ?>/>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>

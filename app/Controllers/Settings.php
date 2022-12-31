@@ -92,6 +92,7 @@ class Settings extends Controller {
                 "logoDisplay" => $this->request->getVar("storeLogoDisplay", FILTER_SANITIZE_STRING),
                 "noteDisplay" => $this->request->getVar("storeNoteDisplay", FILTER_SANITIZE_STRING),
                 "otherTaxes" => $this->request->getVar("storeOtherTaxes", FILTER_SANITIZE_STRING),
+                "ProductImage" => $this->request->getVar("storeProductImage", FILTER_SANITIZE_STRING),
                 "taxes" => $this->request->getVar("storeTaxes"),
             ];
 
