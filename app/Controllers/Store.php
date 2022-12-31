@@ -150,6 +150,12 @@
              * @return RedirectResponse|string
              */
             if ($this->request->getMethod() == "post"){
+
+//                echo "<pre>";
+//                var_dump($_POST);
+//                echo "</pre>";
+//                exit;
+
                 $data['post'] = $_POST;
                 session()->setTempdata( "uri_referer",base_url()."/store", "10000000");
 
@@ -180,8 +186,10 @@
                             "store_id"          => $this->store_id,
                             "fulldate"          => date("D jS F, Y  h:i a"),
                             "salesCount"        => $salesCount  ? $salesCount + 1 : 1,
-                            "notes"              => $this->request->getVar('saleNote', FILTER_SANITIZE_STRING),
-                            "showNoteOnReceipt" => $this->request->getVar('showNoteOnReceipt', FILTER_SANITIZE_STRING)
+                            "notes"             => $this->request->getVar('saleNote', FILTER_SANITIZE_STRING),
+                            "showNoteOnReceipt" => $this->request->getVar('showNoteOnReceipt', FILTER_SANITIZE_STRING),
+                            "taxes"             => $this->request->getVar("taxes"),
+                            "otherTaxes"        => $this->request->getVar('otherTaxes',FILTER_SANITIZE_STRING),
                         ];
 
                         $data['post']["salesCount"] = $sale['salesCount'];
@@ -200,6 +208,7 @@
                                 "quantity" => $this->request->getVar("quantity", FILTER_SANITIZE_STRING),
                                 "price" => $this->request->getVar("price", FILTER_SANITIZE_STRING),
                                 "amount" => $this->request->getVar("amount", FILTER_SANITIZE_STRING),
+                                "category_id" => $this->request->getVar("cat_id", FILTER_SANITIZE_STRING)
                             ];
 
                             for ($i = 0; $i < count($postedSale['product']); $i++) {
@@ -207,6 +216,7 @@
                                     "sales_id" => $sentSale,
                                     "store_id" => $this->store_id,
                                     "product" => $postedSale["product"][$i],
+                                    "category_id" => $postedSale["category_id"][$i],
                                     "product_id" => $postedSale["product_id"][$i],
                                     "quantity" => $postedSale["quantity"][$i],
                                     "price" => $postedSale["price"][$i],
@@ -263,7 +273,9 @@
                             "fulldate"          => date("D jS F, Y  h:i a"),
                             "salesCount"        => $salesCount  ? $salesCount + 1 : 1,
                             "notes"              => $_POST['saleNote'],
-                            "showNoteOnReceipt" => $_POST['showNoteOnReceipt']
+                            "showNoteOnReceipt" => $_POST['showNoteOnReceipt'],
+                            "taxes"             => $this->request->getVar("taxes"),
+                            "otherTaxes"        => $this->request->getVar('otherTaxes',FILTER_SANITIZE_STRING),
                         ];
 
                         $sentSale = $this->storefrontModel->sendCreditSale($sale);
@@ -279,6 +291,7 @@
                                 "quantity" => $this->request->getVar("quantity"),
                                 "price" => $this->request->getVar("price"),
                                 "amount" => $this->request->getVar("amount"),
+                                "category_id" => $this->request->getVar("cat_id", FILTER_SANITIZE_STRING)
                             ];
 
                             for ($i = 0; $i < count($postedSale['product']); $i++) {
@@ -286,6 +299,7 @@
                                     "sales_id" => $sentSale,
                                     "store_id" => $this->store_id,
                                     "product" => $postedSale["product"][$i],
+                                    "category_id" => $postedSale["category_id"][$i],
                                     "product_id" => $postedSale["product_id"][$i],
                                     "quantity" => $postedSale["quantity"][$i],
                                     "price" => $postedSale["price"][$i],
@@ -343,7 +357,9 @@
                             "fulldate"          => date("D jS F, Y  h:i a"),
                             "pending_status"    => 1,
                             "notes"              => $_POST['saleNote'],
-                            "showNoteOnReceipt" => $_POST['showNoteOnReceipt']
+                            "showNoteOnReceipt" => $_POST['showNoteOnReceipt'],
+                            "taxes"             => $this->request->getVar("taxes"),
+                            "otherTaxes"        => $this->request->getVar('otherTaxes',FILTER_SANITIZE_STRING),
                         ];
 
 
@@ -354,11 +370,12 @@
 
                         if ($sentSale) {
                             $postedSale = [
-                                "product_id" => $this->request->getVar("item_id"),
-                                "product" => $this->request->getVar("item"),
-                                "quantity" => $this->request->getVar("quantity"),
-                                "price" => $this->request->getVar("price"),
-                                "amount" => $this->request->getVar("amount"),
+                                "product_id" => $this->request->getVar("item_id", FILTER_SANITIZE_STRING),
+                                "product" => $this->request->getVar("item", FILTER_SANITIZE_STRING),
+                                "quantity" => $this->request->getVar("quantity", FILTER_SANITIZE_STRING),
+                                "price" => $this->request->getVar("price", FILTER_SANITIZE_STRING),
+                                "amount" => $this->request->getVar("amount", FILTER_SANITIZE_STRING),
+                                "category_id" => $this->request->getVar("cat_id", FILTER_SANITIZE_STRING)
                             ];
 
                             for ($i = 0; $i < count($postedSale['product']); $i++) {
@@ -366,6 +383,7 @@
                                     "sales_id" => $sentSale,
                                     "store_id" => $this->store_id,
                                     "product" => $postedSale["product"][$i],
+                                    "category_id" => $postedSale["category_id"][$i],
                                     "product_id" => $postedSale["product_id"][$i],
                                     "quantity" => $postedSale["quantity"][$i],
                                     "price" => $postedSale["price"][$i],
@@ -448,6 +466,10 @@
                     session()->setTempdata( "uri_referer",$this->request->uri, "10");
                     $data['user_role_permissions'] = $this->rolesModel->getUserRolePermissions(["role_id" => $this->userdata->role_id]);
                     $data['sales'] = $this->storeModel->getSales($this->store_id);
+//                    echo "<pre>";
+//                    print_r($data["sales"]);
+//                    echo "</pre>";
+//                    exit;
 
 //                    var_dump(json_encode($data['user_role_permissions']));
 //                    var_dump($this->userdata);
@@ -537,7 +559,9 @@
                                         "fulldate" => date("D jS F, Y  H:ia"),
                                         "pending_status" => 1,
                                         "notes"              => $_POST['saleNote'],
-                                        "showNoteOnReceipt" => $_POST['showNoteOnReceipt']
+                                        "showNoteOnReceipt" => $_POST['showNoteOnReceipt'],
+                                        "taxes"             => $this->request->getVar("taxes"),
+                                        "otherTaxes"        => $this->request->getVar('otherTaxes',FILTER_SANITIZE_STRING),
                                     ];
 
                                     $clause = [
@@ -633,7 +657,9 @@
                                         "sale_close_date" => date("Y-m-d").",".date("H:ia"),
                                         "pending_status" => 0,
                                         "notes"              => $_POST['saleNote'],
-                                        "showNoteOnReceipt" => $_POST['showNoteOnReceipt']
+                                        "showNoteOnReceipt" => $_POST['showNoteOnReceipt'],
+                                        "taxes"             => $this->request->getVar('taxes'),
+                                        "otherTaxes"        => $this->request->getVar('otherTaxes',FILTER_SANITIZE_STRING),
                                     ];
 
                                     $clause = [

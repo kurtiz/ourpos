@@ -4,10 +4,16 @@ instantiating plugins {
     select2, for the select with search box
 }
 */
-$(document).ready(function() {
+$(document).ready(function () {
     //*** switchery instantiating ***//
-    let elemprimary = document.querySelector('#js-success');
+    let elemprimary = document.querySelector('#vatToggle');
+    let elemprimary2 = document.querySelector('#showNoteOnReceipt');
     let switchery = new Switchery(elemprimary, {
+        color: '#2ed8b6',
+        jackColor: '#fff'
+    });
+
+    switchery = new Switchery(elemprimary2, {
         color: '#2ed8b6',
         jackColor: '#fff'
     });
@@ -45,7 +51,7 @@ $('#categories_select').on("change", function () {
 })
 
 //*** Vat Toggle ***//
-$('#js-success').on("change", function() {
+$('#js-success').on("change", function () {
 
     //checking the value of the switch button
     if ($(this).prop("checked") === false) {
@@ -61,7 +67,7 @@ $('#js-success').on("change", function() {
         })
 
         // $(this).prop("checked") === "true"
-        if(parseFloat($('#paid').text()).toFixed(2) * 1 === 0.00 && (parseFloat($('#chang').text()).toFixed(2) * 1 === 0.00)) {
+        if (parseFloat($('#paid').text()).toFixed(2) * 1 === 0.00 && (parseFloat($('#chang').text()).toFixed(2) * 1 === 0.00)) {
             // recalculates the stock, amount and total
             overallSuM('subtotals');
 
@@ -70,7 +76,7 @@ $('#js-success').on("change", function() {
 
             // calculates the change
             calChange();
-        }else {
+        } else {
             overallSumm('subtotals');
 
             //calculates the discount
@@ -90,7 +96,7 @@ $('#js-success').on("change", function() {
             bgColor: '#2dce89',
             textColor: 'white'
         })
-        if(parseFloat($('#paid').text()).toFixed(2) * 1 === 0.00 && (parseFloat($('#chang').text()).toFixed(2) * 1 === 0.00)) {
+        if (parseFloat($('#paid').text()).toFixed(2) * 1 === 0.00 && (parseFloat($('#chang').text()).toFixed(2) * 1 === 0.00)) {
             // recalculates the stock, amount and total
             overallSuM('subtotals');
 
@@ -99,7 +105,7 @@ $('#js-success').on("change", function() {
 
             // calculates the change
             calChange();
-        }else {
+        } else {
             overallSumm('subtotals');
 
             //calculates the discount
@@ -114,14 +120,14 @@ $('#js-success').on("change", function() {
 
 
 //*** Apply Discount Button ***//
-$("#applyDiscountBtn").click(function(){
+$("#applyDiscountBtn").click(function () {
     discount("tableTotal");
 });
 //*** End Apply Discount Button ***//
 
 
 //*** Add to cart with add button ***//
-$(document).on('click', '.add_product', function() {
+$(document).on('click', '.add_product', function () {
     // gets the id of the button clicked
     let button_id = $(this).attr("id");
 
@@ -155,7 +161,7 @@ $(document).on('click', '.add_product', function() {
 
 
 //*** Event When Amount Paid is Entered ***//
-$('#paid').on('keypress', function() {
+$('#paid').on('change', function () {
     // calChange();
     //grabs event keycode in the keycode constant
     const {keyCode} = event;
@@ -172,7 +178,7 @@ $('#paid').on('keypress', function() {
                 textColor: 'white',
                 hideAfter: 5000,
             }) //checks if the amount paid is lesser than the expected amount
-        } else if ((parseFloat($('#paid').val()).toFixed(2) * 1) < (parseFloat($("#tableTotal").val().replaceAll(",","")).toFixed(2) * 1)) {
+        } else if ((parseFloat($('#paid').val()).toFixed(2) * 1) < (parseFloat($("#tableTotal").val().replaceAll(",", "")).toFixed(2) * 1)) {
             // shows payment since the amount paid is not enough
             $.toast({
                 head: "Insufficient Payment",
@@ -184,7 +190,7 @@ $('#paid').on('keypress', function() {
                 textColor: 'white',
                 hideAfter: 5000,
             }); // checks if the the amount paid has not been entered
-        } else if ((parseFloat($("#paid").val()).toFixed(2) * 1) < 1 || $("#paid").val() === "" ) {
+        } else if ((parseFloat($("#paid").val()).toFixed(2) * 1) < 1 || $("#paid").val() === "") {
             // shows payment error since the amount paid has not been entered
             $.toast({
                 head: "Payment Error",
@@ -208,7 +214,7 @@ $('#paid').on('keypress', function() {
                 textColor: 'white',
                 hideAfter: 5000,
             })
-        } 
+        }
         // else {
         //     Swal.fire({
         //         title: 'Are you sure you want to place this order?',
@@ -237,7 +243,7 @@ $('#paid').on('keypress', function() {
 
 
 //*** Clear Cart Button ***//
-$("#clearCartBtn").on("click", function (){
+$("#clearCartBtn").on("click", function () {
     Swal.fire({
         title: 'Are you sure you want to clear the cart?',
         showDenyButton: true,
@@ -271,6 +277,7 @@ $("#clearCartBtn").on("click", function (){
 
 //*** Submit Button click ***//
 $('#subm').click(function () {
+    calChange()
     // checks the type of sale whether direct or credit sale
     if ($("#disappear").prop("style")[0] === undefined) { // checks if the paid and change section is hidden
         // checks if total is 0.00
@@ -355,7 +362,7 @@ $('#subm').click(function () {
             });
 
         }
-    }else {
+    } else {
         // $("#item-form").submit();
         Swal.fire({
             title: 'Are you sure you want to place this order?',
@@ -386,11 +393,11 @@ $('#subm').click(function () {
 
 
 //*** Save Submit Button click ***//
-$('#savem').on('click',function () {
+$('#savem').on('click', function () {
     let sale_type = $("#sale_type");
     let former_value = sale_type.val();
     console.log(former_value)
-   // checks if total is 0.00
+    // checks if total is 0.00
     if (parseFloat($('#tableTotal').text()).toFixed(2) * 1 === 0.00) {
         // show an Cart error since there is nothing in th cart
         $.toast({
@@ -421,7 +428,7 @@ $('#savem').on('click',function () {
                 sale_type.val("pending");
                 console.log(sale_type.val())
                 setTimeout(
-                    function(){
+                    function () {
                         // submits form if all the above exceptions are validated
                         $("#item-form").submit();
                     }, 100
@@ -437,6 +444,7 @@ $('#savem').on('click',function () {
     }
 
 })
+
 //*** End Save Submit Button Click ***//
 
 
@@ -485,7 +493,7 @@ function addContent(quantityID, priceID, totalID, stockID) {
         totalItem = price * quantity;
 
         // assigns the value to the added product's/item's/services' total price view
-        $(`#${totalID}`).val(parseFloat(totalItem).toFixed(2) * 1);
+        $(`#${totalID}`).val(parseFloat(totalItem.toString()).toFixed(2) * 1);
 
     } else {
         // shows stock error since there's not enough stock of that product/item/service
@@ -499,7 +507,7 @@ function addContent(quantityID, priceID, totalID, stockID) {
             textColor: 'white',
             hideAfter: 5000,
         })
-         x=$(`#${quantityID}`);
+        x = $(`#${quantityID}`);
         // changes the quantity back to 1
         x.val("1");
 
@@ -508,7 +516,7 @@ function addContent(quantityID, priceID, totalID, stockID) {
 
         // notifies the user which items quantity needs attention
         x.addClass("form-control-danger");
-        setTimeout(()=>{
+        setTimeout(() => {
             x.removeClass("form-control-danger");
         }, 5000);
     }
@@ -574,7 +582,7 @@ function addContents(quantityID, priceID, totalID, stockID) {
             textColor: 'white',
             hideAfter: 5000,
         })
-        x=$(`#${quantityID}`);
+        x = $(`#${quantityID}`);
         // changes the quantity back to 1
         x.val("1");
         // changes the price to the corresponding value of the quantity
@@ -582,7 +590,7 @@ function addContents(quantityID, priceID, totalID, stockID) {
 
         // notifies the user which items quantity needs attention
         x.addClass("form-control-danger");
-        setTimeout(()=>{
+        setTimeout(() => {
             x.removeClass("form-control-danger");
         }, 5000);
 
@@ -596,9 +604,9 @@ function addContents(quantityID, priceID, totalID, stockID) {
  * @param {array} array the array of numbers to be summed up
  * @return {number} the summed up figure
  */
-function array_sum(array){
+function array_sum(array) {
     let result = 0;
-    for (i=0; i<array.length; i++){
+    for (i = 0; i < array.length; i++) {
         result += Number(array[i]);
     }
     return result;
@@ -633,11 +641,11 @@ function overallSumm(sumClass) {
     let vat;
 
     // gets the value of the VAT switch
-    let checkr = $("#js-success").prop('checked');
+    let vatStatus = $("#js-success").prop('checked');
 
     // check for the value of the VAT switch if off changes to vat value to 0 else
     // it uses the original VAT value
-    if (checkr === false) {
+    if (vatStatus === false) {
         vat = 0;
     } else {
         vat = $('#vat_percentage').val();
@@ -648,14 +656,29 @@ function overallSumm(sumClass) {
 
     $('#vat_amount').val(val);
 
-    // adds the VAT value of the total amount to the total amount
-    let toPay = (val) + (ans / 1);
+    let taxesAmount = 0
 
+    if (otherTaxesState) {
+        let taxes = calculateTaxes(ans)
+
+        $("#txtTaxes").val(JSON.stringify(taxes))
+
+        taxesAmount = []
+
+        for (const tax in taxes) {
+            taxesAmount.push(taxes[tax].amount)
+        }
+
+        taxesAmount = array_sum(taxesAmount)
+    }
+
+    let toPay;
+    toPay = (val) + (ans) + (taxesAmount);
     // assigns the value to the cart table's total UI
     vTotal.html(
         parseFloat(toPay).toFixed(2).toString()
             .replace(
-            /\B(?=(\d{3})+(?!\d))/g, ","
+                /\B(?=(\d{3})+(?!\d))/g, ","
             ) // this includes comma before every three place values
     );
     return toPay;
@@ -686,10 +709,10 @@ function overallSuM(sumClass) {
     let tots = parseFloat(vTotal.text()).toFixed(2);
 
 
-    let checkr = $("#js-success").prop("checked");
+    let vatStatus = $("#js-success").prop("checked");
 
 
-    if (checkr === false) {
+    if (vatStatus === false) {
         vat = 0;
     } else {
         vat = $('#vat_percentage').val();
@@ -698,18 +721,37 @@ function overallSuM(sumClass) {
     let val = (vat / 100) * ans;
     $('#vat_amount').val(val);
 
-    let topay;
-    topay = (val) + (ans);
+    let taxesAmount = 0
+
+    if (otherTaxesState) {
+        let taxes = calculateTaxes(ans)
+
+        $("#txtTaxes").val(JSON.stringify(taxes))
+
+        taxesAmount = []
+
+        for (const tax in taxes) {
+            taxesAmount.push(taxes[tax].amount)
+        }
+
+        taxesAmount = array_sum(taxesAmount)
+    }
+
+    let toPay
+    toPay = (val) + (ans) + (taxesAmount);
     vTotal.html(
-        parseFloat(topay).toFixed(2).toString()
+        parseFloat(toPay).toFixed(2).toString()
             .replace(
                 /\B(?=(\d{3})+(?!\d))/g, ","
             )
     );
 
     let paid = parseFloat($("#paid").val()).toFixed(2) * 1;
-    let total_amount = parseFloat(topay).toFixed(2) * 1
-    $('#chang').val(parseFloat(total_amount - paid).toFixed(2) * -1);
+    let total_amount = parseFloat(toPay).toFixed(2) * 1
+    $('#chang').val(parseFloat(
+        (total_amount - paid).toString()
+    ).toFixed(2) * -1);
+
     if (paid < total_amount) {
         $.toast({
             head: "Insufficient Payment",
@@ -724,30 +766,49 @@ function overallSuM(sumClass) {
     }
 }
 
+function calculateTaxes(amount) {
+    let newTaxObject = {}
+    for (let tax in taxesObject) {
+        if (taxesObject[tax].status === "active") {
+            newTaxObject[tax] = {
+                value: taxesObject[tax].value,
+                amount: parseFloat(
+                    parseFloat(
+                        (
+                            (taxesObject[tax].value / 100) * amount).toString()
+                    ).toFixed(2)
+                )
+            }
+        }
+    }
+    return newTaxObject
+}
 
 /**
  * calculates the change
  */
 function calChange() {
     let ob = $("#paid")
+    let tableTotal = $("#tableTotal")
 
-        // get the value of the amount paid
-        let paid = parseFloat($("#paid").val()).toFixed(2) * 1;
+    // get the value of the amount paid
+    let paid = parseFloat(ob.val()).toFixed(2) * 1;
     if (ob.length < 0) {
         // get the total amount from the cart
-        let total_amount = parseFloat($("#tableTotal").text().replaceAll(",", "")).toFixed(2) * 1;
+        let total_amount = parseFloat(tableTotal.text().replaceAll(",", "")).toFixed(2) * 1;
 
         // checks if the amount paid has been entered before performing the calculations
         if (paid !== 0) {
-            $('#chang').val(parseFloat(total_amount - paid).toFixed(2) * -1);
+            $('#chang').val(parseFloat((total_amount - paid).toString()).toFixed(2) * -1);
             console.log((total_amount - paid) * -1);
         }
-        $("#totalAmount").val($("#tableTotal").text());
+        $("#totalAmount").val(tableTotal.text());
     }
 }
 
 
-let count = Array(0,0,0,0);
+let count = Array(0, 0, 0, 0);
+
 /**
  * calculates the discount on the total of all the products on the cart table (including the VAT) and discounts
  * price
@@ -763,48 +824,48 @@ function discount(tableTotal) {
     let promo = $("#promo");
     let total;
 
-    if (content === "" || content === null || isNaN(content)){
+    if (content === "" || content === null || isNaN(content)) {
         content = "0.00";
     }
 
-    if ($("#noDiscount").prop("checked")){
+    if ($("#noDiscount").prop("checked")) {
         overallSumm("subtotals");
         calChange();
-         if (count[0] === 0) {
+        if (count[0] === 0) {
 
-             count[0] = 1;
-             count[1] = 0;
-             count[2] = 0;
-             count[3] = 0;
+            count[0] = 1;
+            count[1] = 0;
+            count[2] = 0;
+            count[3] = 0;
 
-             $.toast({
-                 text: 'You have discarded the discount',
-                 showHideTransition: 'fade',
-                 icon: 'success',
-                 position: "top-right",
-                 bgColor: '#2dce89',
-                 textColor: 'white'
-             })
-         }
+            $.toast({
+                text: 'You have discarded the discount',
+                showHideTransition: 'fade',
+                icon: 'success',
+                position: "top-right",
+                bgColor: '#2dce89',
+                textColor: 'white'
+            })
+        }
 
-         discount_type.val("");
-         discount_amount.val("");
-         promo.val("")
+        discount_type.val("");
+        discount_amount.val("");
+        promo.val("")
 
-    }else if ($("#discountAmount").prop("checked")) {
+    } else if ($("#discountAmount").prop("checked")) {
 
 
         let total = overallSumm("subtotals");
 
-        total = total- Number(content)
-        console.log( "discount price: ", total )
+        total = total - Number(content)
+        console.log("discount price: ", total)
 
         // this includes comma before every three place values "sum total: ",total,
         total = parseFloat(total).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
         cartTotal.text(total);
         calChange();
 
-        let reference = parseFloat(content.replace(/,/g,"")).toFixed(2) * 1;
+        let reference = parseFloat(content.replace(/,/g, "")).toFixed(2) * 1;
         reference = Math.abs(reference);
         reference = reference.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 
@@ -828,7 +889,6 @@ function discount(tableTotal) {
                 textColor: 'white'
             })
         }
-
 
 
     } else if ($("#discountPercentage").prop("checked")) {
@@ -859,7 +919,7 @@ function deleteRow(id) {
 
 
 //*** Select Customer ***//
-$(document).on('change', '#customer_select', function() {
+$(document).on('change', '#customer_select', function () {
     // splits the info into an array
     cusInfo = $('#customer_select').val().split(",");
 
@@ -871,30 +931,30 @@ $(document).on('change', '#customer_select', function() {
 
 
 //*** Add to cart By Item Image ***//
-$(document).on('click', '.img-thumbnail', function() {
+$(document).on('click', '.img-thumbnail', function () {
 
     // gets the button id
-    var button_id = $(this).attr("id");
+    let button_id = $(this).attr("id");
 
     // extracts the barcode number the id
-    barcode = button_id.replace("img", "");
+    let barcode = button_id.replace("img", "");
 
     // combines the barcode number with "#" to call a <p> tag that contains the various info of
     // the item to be added to the cart
-    id = `#${barcode}`
+    let id = `#${barcode}`
 
     // finds the various info of item
     name = $(id).find("span").eq(1).text();
-    price = $(id).find("span").eq(3).text();
+    let price = $(id).find("span").eq(3).text();
 
-    category = $(`#categoryInfo${barcode}`).text()
+    let category = $(`#categoryInfo${barcode}`).text()
     category = category.split(",")
 
-    item_id = $(`#item_id${barcode}`).text()
+    let item_id = $(`#item_id${barcode}`).text()
 
     // variable used to track the number times and item has been added to the cart
     // this number always increases by 1 anytime an item is added to the cart
-    var i;
+    let i;
 
     // tracking number UI element keeps the a number used to track the history of the number
     // of items that have been added to the cart
@@ -921,7 +981,7 @@ $(document).on('click', '.img-thumbnail', function() {
         // else its add a new row of the item added with all needed info including the
         // name, price, quantity, total, category and id
         $('#cart-table').append(
-            '<tr id="row' + i + '" class="item_row"><td hidden><input type="text" name="item_id[]" value="'+item_id.trim()+'"/></td>' +
+            '<tr id="row' + i + '" class="item_row"><td hidden><input type="text" name="item_id[]" value="' + item_id.trim() + '"/></td>' +
             '<td><input type="text" id="name' + barcode + '" readonly="readonly" name="item[]" value="' + name + '" ' +
             'class="form-control"/></td><td><input type="text" readonly="readonly" id="p' + barcode + '" ' +
             'name="price[]" value="' + price + '" class="form-control"/></td><td><input type="number" step="0.01" ' +
@@ -933,8 +993,8 @@ $(document).on('click', '.img-thumbnail', function() {
             'readonly="readonly" id="t' + barcode + '" name="amount[]"  value="' + price + '" ' +
             'class="form-control subtotals"/></td><td><button type="button" name="remove" id="' + i + '" ' +
             'onclick="deleteRow(' + i + '); toolTipRender(barcode, \'#q\' + barcode)"  class="btn btn-danger btn_remove"><i class=\'ik ik-trash-2\'></i>' +
-            '</button></td> <td hidden><input type="text" name="cat_id[]" value="'+category[0].trim()+'"/></td> ' +
-            '<td hidden><input type="text" name="cat_name[]" value="'+category[1].trim()+'"/></td></tr>'
+            '</button></td> <td hidden><input type="text" name="cat_id[]" value="' + category[0].trim() + '"/></td> ' +
+            '<td hidden><input type="text" name="cat_name[]" value="' + category[1].trim() + '"/></td></tr>'
         );
         // calculates the content on the cart
         addContent('q' + barcode, 'p' + barcode, 't' + barcode, 'stk' + barcode);
@@ -952,33 +1012,33 @@ $(document).on('click', '.img-thumbnail', function() {
 
 
 //*** Add to cart By Selecting from Dropdown List ***//
-$(document).on('change', '#product_select', function() {
+$(document).on('change', '#product_select', function () {
     // gets the id of the selected option
-    let  option_id = $(this).val();
+    let option_id = $(this).val();
 
     // extracts the info of the added item from the option id into an array
     let barcode = option_id.split(",");
 
     // clears white spaces around the string
-    for (let i = 0; i < barcode.length; i++){
+    for (let i = 0; i < barcode.length; i++) {
         barcode[i] = barcode[i].trim();
     }
 
     // gets the name and price of selected item and splits the info into 2
-    selectProduct = $("#select2-product_select-container").text()
+    let selectProduct = $("#select2-product_select-container").text()
     name = selectProduct.split(":")[0].trim();
-    price = selectProduct.split(":")[1].trim();
+    let price = selectProduct.split(":")[1].trim();
 
     // gets the category info of the selected item and splits it into and array
-    category = $(`#categoryInfo${barcode[1]}`).text()
+    let category = $(`#categoryInfo${barcode[1]}`).text()
     category = category.split(",")
 
     // gets the id of the selected item
-    item_id = $(`#item_id${barcode[1]}`).text()
+    let item_id = $(`#item_id${barcode[1]}`).text()
 
     // variable used to track the number times and item has been added to the cart
     // this number always increases by 1 anytime an item is added to the cart
-    var i;
+    let i;
 
     // tracking number UI element keeps the a number used to track the history of the number
     // of items that have been added to the cart
@@ -992,7 +1052,7 @@ $(document).on('change', '#product_select', function() {
         $("#q" + barcode[1]).val(parseInt($("#q" + barcode[1]).val()) + 1)
 
         // recalculates the content in the cart
-        addContent('q' + barcode[1], 'p' + barcode[1], 't' + barcode[1], 'stk'+ barcode[1]);
+        addContent('q' + barcode[1], 'p' + barcode[1], 't' + barcode[1], 'stk' + barcode[1]);
         overallSumm('subtotals');
         discount('tableTotal');
         toolTipRender(barcode[1], '#q' + barcode[1])
@@ -1003,7 +1063,7 @@ $(document).on('change', '#product_select', function() {
         // else its add a new row of the item added with all needed info including the
         // name, price, quantity, total, category and id
         $('#cart-table').append(
-            '<tr id="row' + i + '" class="item_row"><td hidden><input type="text" name="item_id[]" value="'+item_id.trim()+'"/></td>' +
+            '<tr id="row' + i + '" class="item_row"><td hidden><input type="text" name="item_id[]" value="' + item_id.trim() + '"/></td>' +
             '<td><input type="text" id="name' +
             barcode[1] + '" readonly="readonly" name="item[]" value="' +
             name + '" class="form-control"/>' +
@@ -1012,19 +1072,19 @@ $(document).on('change', '#product_select', function() {
             price + '" class="form-control"/></td><td>' +
             '<input type="number" step="0.01" min="1" name="quantity[]" id="q' + barcode[1] + '"' +
             'onchange = "addContents(\'q' + barcode[1] + '\',\'p' + barcode[1] + '\',\'t' + barcode[1] + '\',\'' +
-            'stk'+barcode[1] + '\'); overallSumm(\'subtotals\'); toolTipRender(barcode[1], \'#q\' + barcode[1])" ' +
+            'stk' + barcode[1] + '\'); overallSumm(\'subtotals\'); toolTipRender(barcode[1], \'#q\' + barcode[1])" ' +
             'onkeyup = "addContent(\'q' + barcode[1] + '\',\'p' + barcode[1] + '\',\'t' + barcode[1] + '\',\'' +
             barcode[1] + '\'); overallSumm(\'subtotals\'); discount(\'tableTotal\');" value="1" class="form-control quantities"/><td>' +
             '<input type="text" readonly="readonly" id="t' + barcode[1] + '" name="amount[]"  value="' + price +
             '" class="form-control subtotals"/></td><td><button type="button" onclick="deleteRow(' + i + ');' +
             'toolTipRender(barcode[1], \'#q\' + barcode[1])" ' +
             'name="remove" id="' + i + '" class="btn btn-danger btn_remove"><i class=\'ik ik-trash-2\'></i>' +
-            '</button></td> <td hidden><input type="text" name="cat_id[]" value="'+category[0].trim()+'"/></td> ' +
-            '<td hidden><input type="text" name="cat_name[]" value="'+category[1].trim()+'"/></td></tr>'
+            '</button></td> <td hidden><input type="text" name="cat_id[]" value="' + category[0].trim() + '"/></td> ' +
+            '<td hidden><input type="text" name="cat_name[]" value="' + category[1].trim() + '"/></td></tr>'
         );
 
         // calculates the content on the cart
-        addContents('q' + barcode[1], 'p' + barcode[1], 't' + barcode[1], 'stk'+barcode[1]);
+        addContents('q' + barcode[1], 'p' + barcode[1], 't' + barcode[1], 'stk' + barcode[1]);
         overallSumm('subtotals');
         discount('tableTotal');
         toolTipRender(barcode[1], '#q' + barcode[1])
@@ -1039,7 +1099,7 @@ $(document).on('change', '#product_select', function() {
 
 
 //*** Add to cart by barcode scan ***//
-$("#barcode_no").on("keypress" , function(event) {
+$("#barcode_no").on("keypress", function (event) {
 
     // CHECKS IF THE KEYSTROKE PRESSED IS THE "enter" KEY
     if (event.keyCode === 13) {
@@ -1083,39 +1143,39 @@ $("#barcode_no").on("keypress" , function(event) {
             calChange();
         } else {
             // checks if the barcode corresponds with any item in inventory
-            if(name !== ""){
-            // if it does it adds a new row of the item added with all needed info including the
-            // name, price, quantity, total, category and id
-            $('#cart-table').append(
-                '<tr id="row' + i + '" class="item_row"><td hidden><input type="text" name="item_id[]" value="'+
-                item_id.trim()+'"/></td>' + '<td><input type="text" id="name' + x.replace("#", "") +
-                '" readonly="readonly" name="item[]" value="' + name + '" class="form-control"/></td>' +
-                '<td><input type="text" readonly="readonly" id="p' + x.replace("#", "") + '" name="price[]" value="' +
-                price + '" class="form-control"/></td><td>' +
-                '<input type="number" step="0.01" min="1" name="quantity[]" id="q' + x.replace("#", "") +
-                '" onchange = "addContent(\'q' + x.replace("#", "") + '\',\'p' + x.replace("#", "") + '\',\'t' +
-                x.replace("#", "") + '\',\'stk' + x.replace("#", "") + '\'); overallSumm(\'subtotals\'); toolTipRender(' +
-                'x.replace(\'#\',\'\'), \'#q\' + x.replace(\'#\', \'\'))" ' +
-                'onkeyup = "addContent(\'q' + x.replace("#", "") + '\',\'p' + x.replace("#", "") + '\',\'t' +
-                x.replace("#", "") + '\',\'stk' + x.replace("#", "") + '\'); overallSumm(\'subtotals\'); discount(\'tableTotal\')" ' +
-                'value="1" class="form-control quantities"/><td><input type="text" readonly="readonly" id="t' +
-                x.replace("#", "") + '" name="amount[]"  value="' + price + '" class="form-control subtotals"/>' +
-                '</td><td><button type="button" onclick="deleteRow(' + i + '); toolTipRender(x.replace(\'#\', \'\'), ' +
-                '\'#q\' + x.replace(\'#\', \'\'))" name="remove" id="' + i +
-                '" class="btn btn-danger btn_remove"><i class=\'ik ik-trash-2\'></i></button></td> <td hidden>' +
-                '<input type="text" name="cat_id[]" value="'+category[0].trim()+'"/></td> ' +
-                '<td hidden><input type="text" name="cat_name[]" value="'+category[1].trim()+'"/></td></tr>'
-            );
+            if (name !== "") {
+                // if it does it adds a new row of the item added with all needed info including the
+                // name, price, quantity, total, category and id
+                $('#cart-table').append(
+                    '<tr id="row' + i + '" class="item_row"><td hidden><input type="text" name="item_id[]" value="' +
+                    item_id.trim() + '"/></td>' + '<td><input type="text" id="name' + x.replace("#", "") +
+                    '" readonly="readonly" name="item[]" value="' + name + '" class="form-control"/></td>' +
+                    '<td><input type="text" readonly="readonly" id="p' + x.replace("#", "") + '" name="price[]" value="' +
+                    price + '" class="form-control"/></td><td>' +
+                    '<input type="number" step="0.01" min="1" name="quantity[]" id="q' + x.replace("#", "") +
+                    '" onchange = "addContent(\'q' + x.replace("#", "") + '\',\'p' + x.replace("#", "") + '\',\'t' +
+                    x.replace("#", "") + '\',\'stk' + x.replace("#", "") + '\'); overallSumm(\'subtotals\'); toolTipRender(' +
+                    'x.replace(\'#\',\'\'), \'#q\' + x.replace(\'#\', \'\'))" ' +
+                    'onkeyup = "addContent(\'q' + x.replace("#", "") + '\',\'p' + x.replace("#", "") + '\',\'t' +
+                    x.replace("#", "") + '\',\'stk' + x.replace("#", "") + '\'); overallSumm(\'subtotals\'); discount(\'tableTotal\')" ' +
+                    'value="1" class="form-control quantities"/><td><input type="text" readonly="readonly" id="t' +
+                    x.replace("#", "") + '" name="amount[]"  value="' + price + '" class="form-control subtotals"/>' +
+                    '</td><td><button type="button" onclick="deleteRow(' + i + '); toolTipRender(x.replace(\'#\', \'\'), ' +
+                    '\'#q\' + x.replace(\'#\', \'\'))" name="remove" id="' + i +
+                    '" class="btn btn-danger btn_remove"><i class=\'ik ik-trash-2\'></i></button></td> <td hidden>' +
+                    '<input type="text" name="cat_id[]" value="' + category[0].trim() + '"/></td> ' +
+                    '<td hidden><input type="text" name="cat_name[]" value="' + category[1].trim() + '"/></td></tr>'
+                );
 
-            // recalculates the content in the cart
-            addContent('q' + x.replace("#", ""), 'p' + x.replace("#", ""), 't' + x.replace("#", ""), 'stk' + x.replace("#", ""));
-            overallSumm('subtotals');
-            discount('tableTotal');
-            toolTipRender(x.replace("#", ""), '#q' + x.replace("#", ""))
+                // recalculates the content in the cart
+                addContent('q' + x.replace("#", ""), 'p' + x.replace("#", ""), 't' + x.replace("#", ""), 'stk' + x.replace("#", ""));
+                overallSumm('subtotals');
+                discount('tableTotal');
+                toolTipRender(x.replace("#", ""), '#q' + x.replace("#", ""))
 
-            // calculates the change
-            calChange();
-            }else {
+                // calculates the change
+                calChange();
+            } else {
                 // shows an error that product does not exist corresponding to this barcode number
                 $.toast({
                     head: "Product Error",
@@ -1134,10 +1194,8 @@ $("#barcode_no").on("keypress" , function(event) {
     }
 
 
-
-
     // clears content of the scan input box for another scan
-    setTimeout(()=>{
+    setTimeout(() => {
         $("#barcode_no").val("");
     }, 250);
 });
@@ -1149,26 +1207,29 @@ $("#barcode_no").on("keypress" , function(event) {
  * @param {string} barcode
  * @param {string} quantityID
  */
-function toolTipRender(barcode,quantityID) {
-    let titleTip = document.getElementById("img"+barcode);
-    let title = titleTip.getAttribute("data-original-title");
-    let stock = $("#stk"+barcode).text();
-    let quantity = $(quantityID).val();
-    if (quantity == null){
-        quantity = 0;
-    }
-    title = title.split(" ");
-    let left = parseFloat(stock).toFixed(2) - parseFloat(quantity).toFixed(2);
+function toolTipRender(barcode, quantityID) {
+    if (document.getElementById("img" + barcode)) {
+        let titleTip = document.getElementById("img" + barcode);
+        let title = titleTip.getAttribute("data-original-title");
+        let stock = $("#stk" + barcode).text();
+        let quantity = $(quantityID).val();
+        if (quantity == null) {
+            quantity = 0;
+        }
+        title = title.split(" ");
+        let left = parseFloat(stock).toFixed(2) - parseFloat(quantity).toFixed(2);
 
-    titleTip.setAttribute("data-original-title",left+" "+title[1]);
+        titleTip.setAttribute("data-original-title", left + " " + title[1]);
+    }
 }
+
 //*** End Tooltip Img ***//
 
 
 /**
  * flip-flop switch that switches between direct sales and credit sales
  */
-function toggle_sale_mode(){
+function toggle_sale_mode() {
 
     let toggle = $("#cart_toggle");
     let sale_type = $("#sale_type");
@@ -1198,8 +1259,8 @@ function toggle_sale_mode(){
             bgColor: '#ffa830',
             textColor: 'white'
         })
-        
-    }else{
+
+    } else {
         toggle.removeClass("sales bg-orange")
         toggle.addClass("credit bg-blue")
         // credit.remove()
@@ -1229,4 +1290,47 @@ function toggle_sale_mode(){
 
 }
 
+
+/**
+ * Apply notes button
+ * saves adds notes to the sale
+ * and determines whether it shows on the receipt or not
+ */
+$("#saveNoteBtn").on("click", function () {
+    let noteToSend =  $("#note_text").val()
+    let checkBoxDisplayNote = $("#showNoteOnReceipt").prop("checked")
+    let txtShowNoteOnReceipt = $("#txtShowNoteOnReceipt")
+    let saleNote = $("#saleNote")
+    if(noteToSend !== "") {
+        if (checkBoxDisplayNote) {
+            txtShowNoteOnReceipt.val("on")
+            saleNote.val(noteToSend)
+        } else {
+            txtShowNoteOnReceipt.val("off")
+            saleNote.val(noteToSend)
+        }
+
+        $.toast({
+            text: 'Note Added Successfully!',
+            showHideTransition: 'fade',
+            icon: 'success',
+            position: "top-right",
+            bgColor: '#2dce89',
+            textColor: 'white'
+        })
+
+        $("#noteModal").modal("hide")
+
+    } else {
+        $.toast({
+            text: "Cannot add empty note!",
+            showHideTransition: 'fade',
+            icon: 'error',
+            position: "top-right",
+            bgColor: '#f5365c',
+            textColor: 'white',
+            hideAfter: 5000,
+        });
+    }
+})
 

@@ -11,9 +11,9 @@
         <title>Print Receipt</title>
     </head>
 
-     <body onload="print();" onafterprint="
+    <body onload="print();" onafterprint="
     <?php
-        echo "window.location.assign('". base_url() . "/store')";
+    echo "window.location.assign('" . base_url() . "/store')";
     ?>
     ">
 
@@ -47,6 +47,7 @@
             color: black;
             line-height: 1.2em;
         }
+
         .contact p {
             font-size: 9px;
         }
@@ -128,57 +129,63 @@
     </style>
 
     <div class="info" style="text-align: center;">
-        <?php if ($store_data->logoDisplay == "on"):?>
+        <?php if ($store_data->logoDisplay == "on"): ?>
             <?php if (!empty($store_data->logo)): ?>
                 <img src="<?= $store_data->logo ?>" width="100px" alt="" srcset="">
             <?php else: ?>
                 <img src="<?= base_url() ?>/public/src/img/brand.png" width="100px" alt="" srcset="">
             <?php endif; ?>
-    <?php endif;?>
+        <?php endif; ?>
         <p>
-        <?php if (strlen($store_data->store_name)< 30):?>
-            <h1>
-                <?= $store_data->store_name ?>
-            </h1>
-        <?php else:?>
+            <?php if (strlen($store_data->store_name) < 30): ?>
+        <h1>
+            <?= $store_data->store_name ?>
+        </h1>
+    <?php else: ?>
         <h5>
             <?= $store_data->store_name ?>
         </h5>
-        <?php endif;?>
+    <?php endif; ?>
         </p>
     </div>
 
     <div id="mid">
         <div style="text-align: center;" class="info">
-        <?php if($receipt->salesCount == "on"):?>
-            <h2 style="font-size:2em">
-                    Order No: <?=$receipt->salesCount?>
-            </h2>
-        <?php endif;?>
+            <?php if ($receipt->salesCount == "on"): ?>
+                <h2 style="font-size:2em">
+                    Order No: <?= $receipt->salesCount ?>
+                </h2>
+            <?php endif; ?>
             <h2 style="font-size:1em">
                 <?php
-                    if (session()->get("what")=="receipt"){
-                        echo "Receipt No.:";
-                    }else if (session()->get("what")=="invoice"){
-                        echo "Invoice No.:";
-                    }
+                if (session()->get("what") == "receipt") {
+                    echo "Receipt No.:";
+                } else if (session()->get("what") == "invoice") {
+                    echo "Invoice No.:";
+                }
                 ?>
                 <?php
-                    if (isset($receipt->receipt_num)){
-                        echo $receipt->receipt_num;
-                    }else {
-                        echo $receipt->invoice_num;
-                    }
+                if (isset($receipt->receipt_num)) {
+                    echo $receipt->receipt_num;
+                } else {
+                    echo $receipt->invoice_num;
+                }
                 ?>
             </h2>
             <?= $receipt->fulldate ?>
             <div class="contact">
-            <h2>
-                <p>
-                <?= $store_data->address ?><br>
-                <a><?= $store_data->mobile ?></a>, <a><?= $store_data->fax ?></a>.
-            </p>
-            </h2>
+                <h2>
+                    <p>
+                        <?= $store_data->address ?>
+                    </p>
+                    <p>
+                        <?php if (!empty($store_data->mobile) && !empty($store_data->fax)): ?>
+                            <a><?= $store_data->mobile ?></a>, <a><?= $store_data->fax ?></a>
+                        <?php else: ?>
+                            <a><?= $store_data->mobile ?></a>
+                        <?php endif; ?>
+                    </p>
+                </h2>
             </div>
         </div>
     </div>
@@ -205,7 +212,7 @@
                     <b>
                         <tr class="service">
                             <td class="tableitem">
-                               <b><p class="itemtext"><?= $receiptDetails[$i]["product"]; ?></p></b>
+                                <b><p class="itemtext"><?= $receiptDetails[$i]["product"]; ?></p></b>
                             </td>
                             <td class="tableitem">
                                 <b><p class="itemtext amt"><?= $receiptDetails[$i]["quantity"]; ?></p></b>
@@ -214,60 +221,73 @@
                                 <b><p class="itemtext amt"><?= $receiptDetails[$i]["price"]; ?></p></b>
                             </td>
                             <td class="tableitem">
-                                <b><p class="itemtext amt"><?= $receiptDetails[$i]["price"] * $receiptDetails[$i]["quantity"] ?></p></b>
+                                <b>
+                                    <p class="itemtext amt"><?= $receiptDetails[$i]["price"] * $receiptDetails[$i]["quantity"] ?></p>
+                                </b>
                             </td>
                         </tr>
                     </b>
                 <?php endfor; ?>
-                <?php if($receipt->showNoteOnReceipt == "on"): ?>
-                <br>
-                <tr>
-                    <td colspan="3">
-                        <h2>
-                            <?=!empty($sale->notes)? $sale->notes : "No note was added to this sale" ?>
-                        </h2>
-                    </td>
-                </tr>
-                <br>
-                <?php endif; ?>
                 <tr class="tabletitle">
                     <td></td>
                     <td class="Rate">
                         <h2><b>Sales Rep:</b>
                     </td>
                     <td class="payment">
-                        <h2><?=$receipt->user_name?></h2>
+                        <h2><?= $receipt->user_name ?></h2>
                     </td>
-                </tr>
-<!--                <tr class="tabletitle">-->
-<!--                    <td></td>-->
-<!--                    <td class="Rate">-->
-<!--                        <h2><b>Served By:</b>-->
-<!--                    </td>-->
-<!--                    <td class="payment">-->
-<!--                        <h2>--><?php ////echo $_COOKIE['waiters'];?><!--</h2></h2>-->
-<!--                    </td>-->
-<!--                </tr>-->
-                <tr class="tabletitle">
                     <td></td>
-                    <td class="Rate">
-                        <h2>Vat(<?=$receipt->vat?>%):</h2>
-                    </td>
-                    <td class="payment">
-                        <h2>GHc. <?=$receipt->vat_amount?></h2>
-                    </td>
                 </tr>
 
-                <?php if(!empty($receipt->discount_type)):?>
-                <tr class="tabletitle">
-                    <td></td>
-                    <td class="Rate">
-                        <h2>Discount:</h2>
-                    </td>
-                    <td class="payment">
-                        <h2>GHc. <?=$receipt->discount?></h2>
-                    </td>
-                </tr>
+                <?php if (!empty($store_data->vat_status == "on")): ?>
+                    <tr class="tabletitle">
+                        <td></td>
+                        <td class="Rate">
+                            <h2>Vat(<?= $receipt->vat ?>%):</h2>
+                        </td>
+                        <td class="payment">
+                            <h2>GHc. <?= $receipt->vat_amount ?></h2>
+                        </td>
+                        <td></td>
+                    </tr>
+                <?php endif; ?>
+
+                <?php if ($receipt->otherTaxes == "on"): ?>
+                    <?php
+                    $otherTaxes = json_decode($receipt->taxes, true);
+                    $keys = array_keys($otherTaxes);
+                    for ($i = 0; $i < count($keys); $i++):
+                        ?>
+                        <tr class="tabletitle">
+                            <td></td>
+                            <td class="Rate">
+                                <h2>
+                                    <?= $keys[$i] ?> (<?= $otherTaxes[$keys[$i]]['value'] ?>%):
+                                </h2>
+                            </td>
+                            <td class="payment">
+
+                                <h2>
+                                    GHc. <?= $otherTaxes[$keys[$i]]['amount'] ?>
+                                </h2>
+                            </td>
+                            <td></td>
+                        </tr>
+                    <?php
+                    endfor;
+                endif; ?>
+
+                <?php if (!empty($receipt->discount_type)): ?>
+                    <tr class="tabletitle">
+                        <td></td>
+                        <td class="Rate">
+                            <h2>Discount:</h2>
+                        </td>
+                        <td class="payment">
+                            <h2>GHc. <?= $receipt->discount ?></h2>
+                        </td>
+                        <td></td>
+                    </tr>
                 <?php endif; ?>
 
                 <tr class="tabletitle">
@@ -276,8 +296,9 @@
                         <h2>Subtotal:</h2>
                     </td>
                     <td class="payment">
-                        <h2>GHc. <?=$receipt->subtotal?></h2>
+                        <h2>GHc. <?= $receipt->subtotal ?></h2>
                     </td>
+                    <td></td>
                 </tr>
 
                 <tr class="tabletitle">
@@ -286,16 +307,30 @@
                         <h2>Total:</h2>
                     </td>
                     <td class="payment">
-                        <h2>GHc. <?=$receipt->total_amount?></h2>
+                        <h2>GHc. <?= $receipt->total_amount ?></h2>
                     </td>
+                    <td></td>
                 </tr>
 
             </table>
         </div>
         <!--End Table-->
 
+        <?php if ($receipt->showNoteOnReceipt == "on" && !empty($receipt->notes)): ?>
+            <div class="contact">
+                <p class="legal" style="text-align:center">
+                    <b>Note:</b> <br>
+                    <?= $receipt->notes ?>
+                </p>
+            </div>
+        <?php endif; ?>
+
+        <div style="text-align: center;">
+            <svg id="barcode"></svg>
+        </div>
+
         <div id="legalcopy" class="contact">
-           
+
             <p class="legal" style="text-align:center">
                 ~ Powered By <strong>Our Technologies Consortium</strong> ~ <br>
             </p>
@@ -303,11 +338,13 @@
                 024 349 5149 | 055 327 6163
                 <br>ourproductandservices1@gmail.com
             </p>
-           
+
 
         </div>
 
     </div>
+
+    <script src="<?= base_url() ?>/public/js/JsBarcode.all.min.js"></script>
 
     <script>
         d = document.getElementsByClassName('amt');
@@ -317,6 +354,16 @@
         for (i = 0; i < d.length; i++) {
             d[i].innerText = parseFloat(d[i].innerText).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
+
+        JsBarcode("#barcode", "<?=$receipt->receipt_num?>", {
+            format: "CODE128",
+            height: 50,
+            displayValue: false,
+            ean128: true
+        });
+
+        // document.querySelector("#barcode").attributes
+
 
     </script>
     </body>

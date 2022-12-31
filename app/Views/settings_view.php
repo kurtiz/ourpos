@@ -164,76 +164,188 @@
                                                            title="VAT percentage applied to the sales"
                                                            class="form-control" placeholder="10" name="storeVatPercentage"
                                                            value="<?= $storedata->vat ?>">
+                                                    <input hidden type="text" id="taxesTxt" name="storeTaxes">
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div class="row">
-
-                                            <div class="col-md-3">
-                                                <div data-toggle="tooltip" data-placement="top"
-                                                     title="Toggle to enable Discounts when making sales"
-                                                     class="form-group">
-                                                    <label for="js-success">Discount</label>
-                                                    <input type="checkbox" id="discount" class="js-success" name="storeDiscount"
-                                                        <?= $storedata->discount == "on" ? "checked" : "" ?>/>
+                                        <div class="<?= ($storedata->otherTaxes == "on") ? "" : "hidden" ?>"
+                                             id="taxes_element">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label for="taxesBtn">Taxes: &nbsp</label>
+                                                    <input disabled type="button" id="taxesBtn" class="btn btn-warning mb-2" value="Show Taxes">
+                                                    <input disabled type="button" id="addTax" class="btn btn-success mb-2" data-repeater-create value="Add New Taxes">
                                                 </div>
                                             </div>
 
-
-                                            <div class="col-md-3">
-                                                <div data-toggle="tooltip" data-placement="top"
-                                                     title="Toggle to enable search with barcode scanner when making sales"
-                                                     class="form-group">
-                                                    <label for="js-success">Barcode Search</label>
-                                                    <input type="checkbox" id="bc_search" class="js-success" name="storeBarcode"
-                                                        <?= $storedata->barcode == "on" ? "checked" : "" ?>/>
+                                            <div class="row" style="display: none" id="taxes_form">
+                                                <div class="container" data-repeater-list="group-a" id="taxes_form_repeater">
+                                                    <div style="display:none" class="row tax-row data-repeater-item">
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <input disabled type="text" data-toggle="tooltip" data-placement="top"
+                                                                       title="name or title of the tax"
+                                                                       class="form-control tax-input tax-title" placeholder="Tax Title (eg. NHIS)" value="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <input disabled type="text" data-toggle="tooltip" data-placement="top"
+                                                                       title="value of the tax in percentage(%)"
+                                                                       class="form-control tax-input tax-value" placeholder="Tax value" value="">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1 mr-3">
+                                                            <div class="form-group">
+                                                                <select disabled type="text" data-toggle="tooltip" data-placement="top"
+                                                                        title="name or title of the tax"
+                                                                        class="form-control tax-input tax-status-select tax-status">
+                                                                    <option value="active">Active</option>
+                                                                    <option value="">Inactive</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <button data-repeater-delete disabled type="button"
+                                                                        class="form-control tax-input btn btn-danger btn-red tax-delete">
+                                                                    <i class="ik ik-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <?php if(!empty($storedata->taxes)): ?>
+                                                    <?php $taxes = json_decode($storedata->taxes, true); $keys = array_keys($taxes); ?>
+                                                    <?php for($i = 0; $i < count($keys); $i++):?>
+                                                    <div class="row tax-row data-repeater-item">
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <input disabled type="text" data-toggle="tooltip" data-placement="top"
+                                                                       title="name or title of the tax"
+                                                                       class="form-control tax-input tax-title" placeholder="Tax Title (eg. NHIS)" value="<?=$keys[$i]?>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="form-group">
+                                                                <input disabled type="number" data-toggle="tooltip" data-placement="top"
+                                                                       title="value of the tax in percentage(%)"
+                                                                       class="form-control tax-input tax-value" placeholder="Tax value" value="<?=$taxes[$keys[$i]]['value']?>">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1 mr-3">
+                                                            <div class="form-group">
+                                                                <select disabled type="text" data-toggle="tooltip" data-placement="top"
+                                                                        title="name or title of the tax"
+                                                                        class="form-control tax-input tax-status-select tax-status">
+                                                                    <option <?=$taxes[$keys[$i]]['status']=="active"? "selected" : "" ?> value="active">Active</option>
+                                                                    <option <?=$taxes[$keys[$i]]['status']==""? "selected" : "" ?> value="">Inactive</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group">
+                                                                <button data-repeater-delete disabled type="button"
+                                                                        class="form-control tax-input btn btn-danger btn-red tax-delete">
+                                                                    <i class="ik ik-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <?php endfor; ?>
+                                                    <?php endif; ?>
                                                 </div>
                                             </div>
-
-                                            <div class="col-md-3">
-                                                <div data-toggle="tooltip" data-placement="top"
-                                                     title="Toggle to enable VAT when making sales"
-                                                     class="form-group">
-                                                    <label for="js-success">Vat</label>
-                                                    <input type="checkbox" id="vat" name="storeVat"
-                                                           class="js-success" <?= $storedata->vat_status == "on" ? "checked" : "" ?>/>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-3">
-                                                <div data-toggle="tooltip" data-placement="top"
-                                                     title="Toggle to enable sales counts printed on receipts"
-                                                     class="form-group">
-                                                    <label for="js-success">Sales Count</label>
-                                                    <input type="checkbox" id="salesCount" name="storeSalesCount"
-                                                           class="js-success" <?= $storedata->salesCount == "on" ? "checked" : "" ?>/>
-                                                </div>
-                                            </div>
-
                                         </div>
 
-                                        <div class="row">
+                                        <div class="row" id="spring">
+                                            <div class="jumbotron col-md-12">
+                                                <h4>
+                                                    Advanced Settings
+                                                </h4>
+                                                <hr>
+                                                <div class="row">
+                                                    <div class="col-md-3">
+                                                        <div data-toggle="tooltip" data-placement="top"
+                                                             title="Toggle to enable Discounts when making sales"
+                                                             class="form-group">
+                                                            <label for="js-success">Discount</label>
+                                                            <input type="checkbox" id="discount" class="js-success" name="storeDiscount"
+                                                                <?= $storedata->discount == "on" ? "checked" : "" ?>/>
+                                                        </div>
+                                                    </div>
 
-                                            <div class="col-md-3">
-                                                <div data-toggle="tooltip" data-placement="top"
-                                                     title="Toggle to enable Logo to show on receipt"
-                                                     class="form-group">
-                                                    <label for="js-success">Logo On Receipt</label>
-                                                    <input type="checkbox" id="logoDisplay" class="js-success" name="storeLogoDisplay"
-                                                        <?= $storedata->logoDisplay == "on" ? "checked" : "" ?>/>
+                                                    <div class="col-md-3">
+                                                        <div data-toggle="tooltip" data-placement="top"
+                                                             title="Toggle to enable search with barcode scanner when making sales"
+                                                             class="form-group">
+                                                            <label for="js-success">Barcode Search</label>
+                                                            <input type="checkbox" id="bc_search" class="js-success" name="storeBarcode"
+                                                                <?= $storedata->barcode == "on" ? "checked" : "" ?>/>
+                                                        </div>
+                                                    </div>
 
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="col-md-3">
-                                                <div data-toggle="tooltip" data-placement="top"
-                                                     title="Toggle to enable Notes when selling in storefront"
-                                                     class="form-group">
-                                                    <label for="js-success">Notes In Store Front</label>
-                                                    <input type="checkbox" id="noteDisplay" class="js-success" name="storeNoteDisplay"
-                                                        <?= $storedata->noteDisplay == "on" ? "checked" : "" ?>/>
+                                                    <div class="col-md-3">
+                                                        <div data-toggle="tooltip" data-placement="top"
+                                                             title="Toggle to enable VAT when making sales"
+                                                             class="form-group">
+                                                            <label for="js-success">Vat</label>
+                                                            <input type="checkbox" id="vat" name="storeVat"
+                                                                   class="js-success" <?= $storedata->vat_status == "on" ? "checked" : "" ?>/>
+                                                        </div>
+                                                    </div>
 
+                                                    <div class="col-md-3">
+                                                        <div data-toggle="tooltip" data-placement="top"
+                                                             title="Toggle to add and use taxes on sales"
+                                                             class="form-group">
+                                                            <label for="js-success">Other Taxes</label>
+                                                            <input type="checkbox" id="otherTaxes" class="js-success" name="storeOtherTaxes"
+                                                                <?= $storedata->otherTaxes == "on" ? "checked" : "" ?>/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div data-toggle="tooltip" data-placement="top"
+                                                             title="Toggle to enable sales counts printed on receipts"
+                                                             class="form-group">
+                                                            <label for="js-success">Sales Count</label>
+                                                            <input type="checkbox" id="salesCount" name="storeSalesCount"
+                                                                   class="js-success" <?= $storedata->salesCount == "on" ? "checked" : "" ?>/>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div data-toggle="tooltip" data-placement="top"
+                                                             title="Toggle to enable Logo to show on receipt"
+                                                             class="form-group">
+                                                            <label for="js-success">Logo On Receipt</label>
+                                                            <input type="checkbox" id="logoDisplay" class="js-success" name="storeLogoDisplay"
+                                                                <?= $storedata->logoDisplay == "on" ? "checked" : "" ?>/>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div data-toggle="tooltip" data-placement="top"
+                                                             title="Toggle to enable Notes when selling in storefront"
+                                                             class="form-group">
+                                                            <label for="js-success">Notes In Store Front</label>
+                                                            <input type="checkbox" id="noteDisplay" class="js-success" name="storeNoteDisplay"
+                                                                <?= $storedata->noteDisplay == "on" ? "checked" : "" ?>/>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-3">
+                                                        <div data-toggle="tooltip" data-placement="top"
+                                                             title="Toggle to show the product image on store front"
+                                                             class="form-group">
+                                                            <label for="js-success">Show Product Image</label>
+                                                            <input type="checkbox" id="productImage" class="js-success" name="storeProductImage"
+                                                                <?= $storedata->productImage == "on" ? "checked" : "" ?>/>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -253,7 +365,18 @@
             <?= $this->include("widgets/footer"); ?>
         </div>
     </div>
+    <style>
+        .btn-red {
+            color: #fff;
+            background-color: #dc3545;
+        }
 
+        /*.btn-red[disabled] {*/
+        /*    color: #fff;*/
+        /*    background-color: rgba(255, 99, 69, 0.87);*/
+        /*}*/
+
+    </style>
     <?= $this->include("widgets/user_menu"); ?>
 
     <script src="<?= base_url(); ?>/public/src/js/vendor/jquery-3.3.1.min.js"></script>
@@ -266,163 +389,8 @@
     <script src="<?= base_url(); ?>/public/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
     <script src="<?= base_url(); ?>/public/plugins/jquery-toast-plugin/dist/jquery.toast.min.js"></script>
     <script src="<?= base_url(); ?>/public/plugins/mohithg-switchery/dist/switchery.min.js"></script>
+    <script src="<?= base_url(); ?>/public/js/settings.js"></script>
     <script>
-        let form = $("#settings-form")
-        form.on("submit", function (){
-            loading_overlay(1)
-        })
-
-        //instantiating plugins {switchery: for the switch button}
-        $(document).ready(function () {
-            //*** switchery instantiating ***//
-            let x = Array("#vat", "#discount", "#bc_search", "#salesCount", "#logoDisplay" ,"#noteDisplay");
-            for (let i = 0; i < x.length; i++) {
-                var elemprimary = document.querySelector(x[i]);
-                var switchery = new Switchery(elemprimary, {
-                    color: '#2ed8b6',
-                    jackColor: '#fff'
-                });
-            }
-            //*** End switchery instantiating ***//
-        });
-
-        $('#vat').on("change", function () {
-                //checking the value of the switch button
-                if ($(this).prop("checked") === false) {
-                    $("#vat_percentage").slideUp(
-                        function () {
-                            $("#vat_percentage").hide()
-                        }
-                    )
-
-                }else if($(this).prop("checked") === true){
-                    // $("#vat_percentage").show()
-                    let classes = $("#vat_percentage").prop("class")
-                    $("#vat_percentage").prop("class", classes.replace("hidden", ""))
-                    $("#vat_percentage").slideDown()
-                }
-            }
-        )
-
-
-        let editBtn = $("#editBtn")
-        let inputText = $("#settings-form input")
-        let inputTextArea = $("#settings-form textarea")
-        let submitBtn = $("#submitBtn")
-        let storeName = $("#store_name")
-        let storeMobile = $("#store_mobile")
-        let storeEmail = $("#store_email")
-        let storeVat = $("#rc_prefix")
-
-        editBtn.on("click", function(){
-            if (editBtn.text() === "Edit") {
-                editBtn.removeClass("btn-success");
-                editBtn.addClass("btn-danger");
-                editBtn.text("Cancel");
-                submitBtn.show();
-
-                inputText.prop("disabled", false)
-                inputTextArea.prop("disabled", false)
-            }else {
-                editBtn.removeClass("btn-danger");
-                editBtn.addClass("btn-success");
-                editBtn.text("Edit");
-                submitBtn.hide();
-
-                inputText.prop("disabled", true)
-                inputTextArea.prop("disabled", true)
-            }
-
-        })
-
-        submitBtn.on("click", function() {
-            if (storeName.val() === "") {
-                $.toast({
-                    text: 'Store name must not be empty!',
-                    showHideTransition: 'fade',
-                    icon: 'error',
-                    position: "top-right",
-                    bgColor: '#f5365c',
-                    textColor: 'white'
-                })
-
-                if(storeName.hasClass("form-control-success")){
-                    storeName.removeClass("form-control-success")
-                    storeName.addClass("form-control-danger")
-                }
-
-                storeName.addClass("form-control-danger")
-                storeName.focus()
-
-            } else if(storeName.hasClass('form-control-danger')) {
-
-                storeName.removeClass("form-control-danger")
-                storeName.addClass("form-control-success")
-
-            }
-
-            if (storeMobile.val() === ""){
-                $.toast({
-                    text: 'Phone must not be empty!',
-                    showHideTransition: 'fade',
-                    icon: 'error',
-                    position: "top-right",
-                    bgColor: '#f5365c',
-                    textColor: 'white'
-                })
-
-                if(storeMobile.hasClass("form-control-success")){
-                    storeMobile.removeClass("form-control-success")
-                    storeMobile.addClass("form-control-danger")
-                }
-
-                storeMobile.addClass("form-control-danger")
-
-                if (!storeName.hasClass('form-control-danger')) {
-                    storeMobile.focus()
-                }
-            } else if(storeMobile.hasClass('form-control-danger')) {
-
-                storeMobile.removeClass("form-control-danger")
-                storeMobile.addClass("form-control-success")
-
-            }
-
-            if (storeEmail.val() === ""){
-                $.toast({
-                    text: 'Email must not be empty!',
-                    showHideTransition: 'fade',
-                    icon: 'error',
-                    position: "top-right",
-                    bgColor: '#f5365c',
-                    textColor: 'white'
-                })
-
-                if(storeEmail.hasClass("form-control-success")){
-                    storeEmail.removeClass("form-control-success")
-                    storeEmail.addClass("form-control-danger")
-                }
-
-                storeEmail.addClass("form-control-danger")
-
-                if(!storeMobile.hasClass('form-control-danger')){
-                    storeEmail.focus()
-                }
-
-            } else if(storeEmail.hasClass('form-control-danger')) {
-
-                storeEmail.removeClass("form-control-danger")
-                storeEmail.addClass("form-control-success")
-
-            }
-
-            if(storeName !== "" && storeMobile !== "" && storeEmail !== ""){
-                loading_overlay(1)
-                form.submit()
-            }
-
-        })
-
         <?php
         if (!empty(session()->getTempdata('success'))):
         ?>
@@ -450,7 +418,6 @@
         <?php
         endif;
         ?>
-
     </script>
     </body>
 

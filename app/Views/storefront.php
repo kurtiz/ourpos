@@ -100,8 +100,8 @@
                                     </h3>
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    <label for="js-success">Vat</label>
-                                    <input type="checkbox" id="js-success" class="js-success" <?=
+                                    <label for="vatToggle">Vat</label>
+                                    <input type="checkbox" id="vatToggle" class="js-success" <?=
                                     ($store_data->vat_status == "on") ? "checked" : "" ?>/>
                                 </div>
 
@@ -163,6 +163,10 @@
                                                       name="saleNote"></textarea>
                                             <input hidden type="text" readonly="readonly" id="txtShowNoteOnReceipt"
                                                    name="showNoteOnReceipt">
+                                            <input hidden type="text" readonly="readonly" id="txtTaxes"
+                                                   name="taxes">
+                                            <input hidden type="text" readonly="readonly" id="txtOtherTaxes"
+                                                   name="otherTaxes" value="<?=$store_data->otherTaxes?>">
                                         </div>
                                         <table class="col-md-12">
                                             <tr id="disappear">
@@ -209,16 +213,7 @@
                                             </p>
                                         </div>
                                     <?php endif; ?>
-<!--                                    <div class="text-center">-->
-<!--                                        <button type="button" id="savem" class="text-left btn btn-warning px-5">-->
-<!--                                            Save-->
-<!--                                        </button>-->
-<!--                                        <button type="button" id="subm" class="text-right btn btn-primary px-5">-->
-<!--                                            Submit-->
-<!--                                        </button>-->
-<!--                                    </div>-->
 
-                                    
                                     <div class="row">
                                         <div class="col-md-12 text-center">
                                             <button type="button" id="savem" class="col-md-5 btn btn-warning m-1">
@@ -317,6 +312,20 @@
                                                         <?php endif; ?>
                                                     <?php endforeach; ?>
                                                 </select>
+                                                <?php foreach ($products as $row): ?>
+                                                    <?php if ((float)$row['quantity'] > 0 && $row['status'] == "active"): ?>
+                                                        <span id="categoryInfo<?= $row['barcode'] ?>" class="catInfo"
+                                                              hidden>
+                                                    <?php if (empty($row['cat_name'])): ?>
+                                                        null,No Category
+                                                    <?php else: ?>
+                                                        <?= $row['cat_id'] ?>,<?= $row['cat_name'] ?>
+                                                    <?php endif; ?>
+                                                </span>
+                                                        <span id="stk<?= $row['barcode'] ?>"
+                                                              hidden><?= $row['quantity'] ?></span>
+                                                    <?php endif; ?>
+                                                <?php endforeach; ?>
                                             <?php else: ?>
                                                 <select id="product_select" name="product_select" class="form-control select2">
                                                     <option value="">No Products In Inventory</option>
@@ -326,7 +335,8 @@
                                         <!-- End Product list -->
                                     </div>
                                 </form>
-                                <div class="row" style="max-height: 484px; overflow-y: scroll; ">
+                                <?php if($store_data->productImage == "on"): ?>
+                                <div id="products-card" class="row" style="max-height: 484px; overflow-y: scroll; ">
                                     <?php if (is_array($products)): ?>
                                         <?php foreach ($products as $row): ?>
                                             <?php if ((float)$row['quantity'] > 0 && $row['status'] == "active"): ?>
@@ -385,6 +395,7 @@
                                     <?php endif; ?>
                                     <input hidden id="track_number" type="number" value="1">
                                 </div>
+                                <?php endif;?>
                             </div>
                         </div>
                     </div>
@@ -469,10 +480,11 @@
                     </div>
 
                     <div class="radio radio-inline">
-                        <label>
-                            <input type="checkbox" id="showNoteOnReceipt">
+                        <input type="checkbox" id="showNoteOnReceipt">
+                        <label for="showNoteOnReceipt">
                             Display on Receipt
                         </label>
+
                     </div>
 
                 </div>
@@ -501,6 +513,8 @@
 <script src="<?= base_url(); ?>/public/js/store-cart.js"></script>
 <script src="<?= base_url(); ?>/public/plugins/sweetalerts2/dist/sweetalert2.js"></script>
 <script>
+    taxesObject = JSON.parse('<?=$store_data->taxes?>');
+    otherTaxesState = <?php if($store_data->otherTaxes == "on"):?> true;<?php else: ?>false;<?php endif; ?>
 
     $("#item-form").on("submit", function () {
         loading_overlay(1)

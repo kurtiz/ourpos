@@ -135,6 +135,53 @@ class StoreModel extends Model {
         }
     }
 
+
+    /**
+     * gets the data of a particular sales
+     * @param $store_id string is the id of the current store
+     * @param $category_id string is the id of the category
+     * @return array|false returns an array of details of the sale
+     */
+    public function getSalesAmountByCategory(string $store_id, string $category_id) {
+        $builder = $this->db->table("sales_details");
+        $builder->where([
+            'store_id' => $store_id,
+            'category_id' => $category_id,
+            'date_sold' => date("Y-m-d"),
+        ]);
+        $builder->select("amount");
+        $result = $builder->get();
+        if (count($result->getResultArray()) > 0) {
+            return $result->getResultArray();
+        }else {
+            return false;
+        }
+    }
+
+
+
+    /**
+     * gets the data of a particular sales
+     * @param $store_id string is the id of the current store
+     * @param $category_id string is the id of the category
+     * @return array|false returns an array of details of the sale
+     */
+    public function getSalesQuantityByCategory(string $store_id, string $category_id) {
+        $builder = $this->db->table("sales_details");
+        $builder->where([
+            'store_id' => $store_id,
+            'category_id' => $category_id,
+            'date_sold' => date("Y-m-d"),
+        ]);
+        $builder->select("quantity");
+        $result = $builder->get();
+        if (count($result->getResultArray()) > 0) {
+            return $result->getResultArray();
+        }else {
+            return false;
+        }
+    }
+
     /**
      * @param $clauses array | mixed conditions for delete the product
      * @return bool returns true if successful or returns false otherwise

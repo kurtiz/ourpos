@@ -231,6 +231,10 @@
                                                       name="saleNote"></textarea>
                                             <input hidden type="text" readonly="readonly" id="txtShowNoteOnReceipt"
                                                    name="showNoteOnReceipt">
+                                            <input hidden type="text" readonly="readonly" id="txtTaxes"
+                                                   name="taxes">
+                                            <input hidden type="text" readonly="readonly" id="txtOtherTaxes"
+                                                   name="otherTaxes" value="<?=$store_data->otherTaxes?>">
                                         </div>
                                         <table class="col-md-12">
                                             <tr id="disappear">
@@ -341,8 +345,7 @@
                                              */
                                             if (is_array($categories)): ?>
                                                 <select id="categories_select" name="category" class="form-control select2">
-                                                    <option value="*">All Categories</option>
-                                                    <option value="">Uncategorized</option>
+                                                    $
                                                     <?php foreach ($categories as $row): ?>
                                                         <!--                                                        --><?php //if ((float)$row['quantity'] > 0 && $row['status'] == "active"): ?>
                                                         <option value="<?= $row['cat_id'] ?>">
@@ -566,7 +569,11 @@
 <script src="<?= base_url(); ?>/public/js/edit-store-cart.js"></script>
 <script src="<?= base_url(); ?>/public/plugins/sweetalerts2/dist/sweetalert2.js"></script>
 <script>
-
+    taxesObject = JSON.parse('<?=$store_data->taxes?>');
+    otherTaxesState = <?php if($store_data->otherTaxes == "on"):?> true;<?php else: ?>false;<?php endif; ?>
+    $("#item-form").on("submit", function () {
+        loading_overlay(1)
+    })
     <?php
     if (!empty(session()->getTempdata('name'))):
     ?>
