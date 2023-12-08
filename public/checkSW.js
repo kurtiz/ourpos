@@ -3,6 +3,6 @@ window.onload = () => {
 
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker
-        .register('http://localhost/myci4/public/sw.js').then(r =>"");
+        .register('http://localhost/ourpos/public/sw.js').then(r =>"");
    }
 }

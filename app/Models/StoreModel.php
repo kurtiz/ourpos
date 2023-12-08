@@ -146,7 +146,7 @@ class StoreModel extends Model {
         $builder = $this->db->table("sales_details");
         $builder->where([
             'store_id' => $store_id,
-            'category_id' => $category_id,
+            'cat_id' => $category_id,
             'date_sold' => date("Y-m-d"),
         ]);
         $builder->select("amount");

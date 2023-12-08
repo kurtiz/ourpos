@@ -208,7 +208,7 @@
                                 "quantity" => $this->request->getVar("quantity", FILTER_SANITIZE_STRING),
                                 "price" => $this->request->getVar("price", FILTER_SANITIZE_STRING),
                                 "amount" => $this->request->getVar("amount", FILTER_SANITIZE_STRING),
-                                "category_id" => $this->request->getVar("cat_id", FILTER_SANITIZE_STRING)
+                                "cat_id" => $this->request->getVar("cat_id", FILTER_SANITIZE_STRING)
                             ];
 
                             for ($i = 0; $i < count($postedSale['product']); $i++) {
@@ -216,7 +216,7 @@
                                     "sales_id" => $sentSale,
                                     "store_id" => $this->store_id,
                                     "product" => $postedSale["product"][$i],
-                                    "category_id" => $postedSale["category_id"][$i],
+                                    "cat_id" => $postedSale["cat_id"][$i],
                                     "product_id" => $postedSale["product_id"][$i],
                                     "quantity" => $postedSale["quantity"][$i],
                                     "price" => $postedSale["price"][$i],
@@ -291,7 +291,7 @@
                                 "quantity" => $this->request->getVar("quantity"),
                                 "price" => $this->request->getVar("price"),
                                 "amount" => $this->request->getVar("amount"),
-                                "category_id" => $this->request->getVar("cat_id", FILTER_SANITIZE_STRING)
+                                "cat_id" => $this->request->getVar("cat_id", FILTER_SANITIZE_STRING)
                             ];
 
                             for ($i = 0; $i < count($postedSale['product']); $i++) {
@@ -299,7 +299,7 @@
                                     "sales_id" => $sentSale,
                                     "store_id" => $this->store_id,
                                     "product" => $postedSale["product"][$i],
-                                    "category_id" => $postedSale["category_id"][$i],
+                                    "cat_id" => $postedSale["category_id"][$i],
                                     "product_id" => $postedSale["product_id"][$i],
                                     "quantity" => $postedSale["quantity"][$i],
                                     "price" => $postedSale["price"][$i],
@@ -375,7 +375,7 @@
                                 "quantity" => $this->request->getVar("quantity", FILTER_SANITIZE_STRING),
                                 "price" => $this->request->getVar("price", FILTER_SANITIZE_STRING),
                                 "amount" => $this->request->getVar("amount", FILTER_SANITIZE_STRING),
-                                "category_id" => $this->request->getVar("cat_id", FILTER_SANITIZE_STRING)
+                                "cat_id" => $this->request->getVar("cat_id", FILTER_SANITIZE_STRING)
                             ];
 
                             for ($i = 0; $i < count($postedSale['product']); $i++) {
@@ -383,7 +383,7 @@
                                     "sales_id" => $sentSale,
                                     "store_id" => $this->store_id,
                                     "product" => $postedSale["product"][$i],
-                                    "category_id" => $postedSale["category_id"][$i],
+                                    "cat_id" => $postedSale["category_id"][$i],
                                     "product_id" => $postedSale["product_id"][$i],
                                     "quantity" => $postedSale["quantity"][$i],
                                     "price" => $postedSale["price"][$i],
