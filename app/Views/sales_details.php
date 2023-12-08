@@ -38,12 +38,7 @@
 <body>
 <?//=var_dump(json_decode($sale->taxes, true));
 //exit;?>
-<div id="overlay">
-    <div class='lds-ripple'>
-        <div></div>
-        <div></div>
-    </div>
-</div>
+<?= $this->include("widgets/loading_overlay"); ?>
 <div class="wrapper">
 
     <!-- // NOTE THE TOP BAR IS SUPPOSED TO BE HERE  -->

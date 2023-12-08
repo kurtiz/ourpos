@@ -32,12 +32,7 @@
     </head>
 
     <body>
-    <div id="overlay">
-        <div class='lds-ripple'>
-            <div></div>
-            <div></div>
-        </div>
-    </div>
+    <?= $this->include("widgets/loading_overlay"); ?>
         <div class="auth-wrapper">
             <div class="container-fluid h-100">
                 <div class="row flex-row h-100 bg-white">
